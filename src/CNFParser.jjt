@@ -1,0 +1,88 @@
+options 
+{ 
+ LOOKAHEAD=1; 
+} 
+ 
+PARSER_BEGIN(CNFParser) 
+
+import java.util.HashMap;
+import java.util.Vector;
+import java.lang.String;
+
+public class CNFParser 
+{
+
+ HashMap<String, Vector<String>> SymbolTable = new HashMap<String,Vector<String>>();
+
+ public static void main(String args[]) throws ParseException { 
+	 CNFParser myParser = new CNFParser(System.in); 
+	 SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
+	 //System.out.println("Valor da expressão: "+myCalc.eval(root)); 
+	 
+	 root.dump(""); // imprime no ecrã a árvore 
+ }
+
+ /*
+int eval(SimpleNode node)
+{ 
+	if(node.jjtGetNumChildren() == 0) // leaf node with integer value 
+ 		return node.val; 
+ 	else if(node.jjtGetNumChildren() == 1) // only one child 
+ 		return this.eval((SimpleNode) node.jjtGetChild(0)); 
+ 
+ 	SimpleNode lhs = (SimpleNode) node.jjtGetChild(0); //left child 
+ 	SimpleNode rhs = (SimpleNode) node.jjtGetChild(1); // right child 
+ 
+	switch(node.id) { 
+	 	case CNFParserTreeConstants.JJTADD : return eval( lhs ) + eval( rhs ); 
+	 	case CNFParserTreeConstants.JJTSUB : return eval( lhs ) - eval( rhs ); 
+		case CNFParserTreeConstants.JJTMUL : return eval( lhs ) * eval( rhs ); 
+		case CNFParserTreeConstants.JJTDIV : return eval( lhs ) / eval( rhs ); 
+	 	default : // abort 
+	 		System.out.println("Operador ilegal!"); 
+	 		System.exit(1); 
+ 		} 
+ 	return 0; 
+	}
+	*/
+} 
+ 
+PARSER_END(CNFParser) 
+ 
+SKIP : 
+{ 
+ " " | "\r" | "\t" 
+} 
+ 
+TOKEN: 
+{ 
+ < LF: "\n" > |
+ < AT: ":="> |
+ < SYMBOL: (["A"-"Z"]) > | //Permiti-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
+ < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
+ < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
+}
+ 
+SimpleNode Expression(): {} 
+{ 
+	 (Atribution() < LF >)+ {return jjtThis;} // código Java entre chavetas 
+}
+
+void Atribution():{Token t;}
+{
+  //S:= tu e o gato NP VP
+  //VP:=Det
+  //Det:= tu
+  //VP:= e o gato
+  
+  //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
+      t=<SYMBOL>
+   {
+   jjtThis.Symbol = new String(t.image);
+   }
+   ":="
+   (     ((t=<NonTerm>{jjtThis.Variables.add(new String(t.image));})+ (t=<Term>{jjtThis.Variables.add(new String(t.image));})*)
+	|
+	 (t=<Term>{jjtThis.Variables.add(new String(t.image));})+
+	)
+   ";"}
