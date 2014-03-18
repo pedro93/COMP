@@ -53,16 +53,16 @@ int eval(SimpleNode node)
  
 PARSER_END(CNFParser) 
  
-SKIP : 
-{ 
- " " | "\r" | "\t" 
+SKIP :
+{
+	" " | "\n" | "\r" | "\t"
 } 
  
 TOKEN: 
 { 
- < LF: "\n" > |
  < AT: ":="> |
- < SYMBOL: (["A"-"Z"]) > | //Permiti-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
+ < END: "END" >|
+ //< SYMBOL: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])* > | //Permiti-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
  < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
 }
@@ -75,12 +75,12 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
 {/*@bgen(jjtree) Expression */
          try {
 /*@egen*/ 
-	 (Atribution() < LF >)+/*@bgen(jjtree)*/
+	 (Atribution())+ < END >/*@bgen(jjtree)*/
                                 {
                                   jjtree.closeNodeScope(jjtn000, true);
                                   jjtc000 = false;
                                 }
-/*@egen*/ {return jjtn000;}/*@bgen(jjtree)*/
+/*@egen*/{return jjtn000;}/*@bgen(jjtree)*/
          } catch (Throwable jjte000) {
            if (jjtc000) {
              jjtree.clearNodeScope(jjtn000);
@@ -107,7 +107,7 @@ void Atribution():{/*@bgen(jjtree) Atribution */
                    SimpleNode jjtn000 = new SimpleNode(JJTATRIBUTION);
                    boolean jjtc000 = true;
                    jjtree.openNodeScope(jjtn000);
-/*@egen*/Token t;}
+/*@egen*/Token t,t1,t2;}
 {/*@bgen(jjtree) Atribution */
    try {
 /*@egen*/
@@ -117,19 +117,17 @@ void Atribution():{/*@bgen(jjtree) Atribution */
   //VP:= e o gato
   
   //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
-      t=<SYMBOL>
+      t=<NonTerm> ":="
    {
    jjtn000.Symbol = new String(t.image);
    }
-   ":="
-   (     ((t=<NonTerm>{jjtn000.Variables.add(new String(t.image));})+ (t=<Term>{jjtn000.Variables.add(new String(t.image));})*)
+    (((t1=<NonTerm>{jjtn000.Variables.add(new String(t1.image));})+ (t2=<Term>{jjtn000.Variables.add(new String(t2.image));})*) 
 	|
-	 (t=<Term>{jjtn000.Variables.add(new String(t.image));})+
-	)
-   ";"/*@bgen(jjtree)*/
+ (t1=<Term>{jjtn000.Variables.add(new String(t1.image));})+) ";"/*@bgen(jjtree)*/
    } finally {
      if (jjtc000) {
        jjtree.closeNodeScope(jjtn000, true);
      }
    }
 /*@egen*/}
+

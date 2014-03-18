@@ -68,7 +68,7 @@ class SimpleNode implements Node {
      out its children. */
 
   public void dump(String prefix) {
-    System.out.println(toString(prefix));
+   // System.out.println(toString(prefix));
     
     if(this.Symbol!=null)
     {
@@ -77,7 +77,7 @@ class SimpleNode implements Node {
     	{
     		System.out.print(" "+Variables.elementAt(i));
     	}
-    	System.out.println("\n");
+    	System.out.println();
     }
     
     if (children != null) {

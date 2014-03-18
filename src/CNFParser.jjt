@@ -49,26 +49,26 @@ int eval(SimpleNode node)
  
 PARSER_END(CNFParser) 
  
-SKIP : 
-{ 
- " " | "\r" | "\t" 
+SKIP :
+{
+	" " | "\n" | "\r" | "\t"
 } 
  
 TOKEN: 
 { 
- < LF: "\n" > |
  < AT: ":="> |
- < SYMBOL: (["A"-"Z"]) > | //Permiti-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
+ < END: "END" >|
+ //< SYMBOL: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])* > | //Permiti-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
  < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
 }
  
 SimpleNode Expression(): {} 
 { 
-	 (Atribution() < LF >)+ {return jjtThis;} // código Java entre chavetas 
+	 (Atribution())+ < END >{return jjtThis;} // código Java entre chavetas 
 }
 
-void Atribution():{Token t;}
+void Atribution():{Token t,t1,t2;}
 {
   //S:= tu e o gato NP VP
   //VP:=Det
@@ -76,13 +76,11 @@ void Atribution():{Token t;}
   //VP:= e o gato
   
   //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
-      t=<SYMBOL>
+      t=<NonTerm> ":="
    {
    jjtThis.Symbol = new String(t.image);
    }
-   ":="
-   (     ((t=<NonTerm>{jjtThis.Variables.add(new String(t.image));})+ (t=<Term>{jjtThis.Variables.add(new String(t.image));})*)
+    (((t1=<NonTerm>{jjtThis.Variables.add(new String(t1.image));})+ (t2=<Term>{jjtThis.Variables.add(new String(t2.image));})*) 
 	|
-	 (t=<Term>{jjtThis.Variables.add(new String(t.image));})+
-	)
-   ";"}
+ (t1=<Term>{jjtThis.Variables.add(new String(t1.image));})+) ";"}
+

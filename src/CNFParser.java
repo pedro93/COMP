@@ -24,9 +24,8 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
       label_1:
       while (true) {
         Atribution();
-        jj_consume_token(LF);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case SYMBOL:
+        case NonTerm:
           ;
           break;
         default:
@@ -34,6 +33,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
           break label_1;
         }
       }
+      jj_consume_token(END);
                                   jjtree.closeNodeScope(jjtn000, true);
                                   jjtc000 = false;
                                  {if (true) return jjtn000;}
@@ -63,7 +63,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
                    /*@bgen(jjtree) Atribution */
                    SimpleNode jjtn000 = new SimpleNode(JJTATRIBUTION);
                    boolean jjtc000 = true;
-                   jjtree.openNodeScope(jjtn000);Token t;
+                   jjtree.openNodeScope(jjtn000);Token t,t1,t2;
     try {
       //S:= tu e o gato NP VP
         //VP:=Det
@@ -72,15 +72,15 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
       
         //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
       
-         t = jj_consume_token(SYMBOL);
-   jjtn000.Symbol = new String(t.image);
+         t = jj_consume_token(NonTerm);
       jj_consume_token(AT);
+   jjtn000.Symbol = new String(t.image);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case NonTerm:
         label_2:
         while (true) {
-          t = jj_consume_token(NonTerm);
-                   jjtn000.Variables.add(new String(t.image));
+          t1 = jj_consume_token(NonTerm);
+                 jjtn000.Variables.add(new String(t1.image));
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case NonTerm:
             ;
@@ -100,15 +100,15 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
             jj_la1[2] = jj_gen;
             break label_3;
           }
-          t = jj_consume_token(Term);
-                                                                            jjtn000.Variables.add(new String(t.image));
+          t2 = jj_consume_token(Term);
+                                                                            jjtn000.Variables.add(new String(t2.image));
         }
         break;
       case Term:
         label_4:
         while (true) {
-          t = jj_consume_token(Term);
-                   jjtn000.Variables.add(new String(t.image));
+          t1 = jj_consume_token(Term);
+            jjtn000.Variables.add(new String(t1.image));
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case Term:
             ;
@@ -148,7 +148,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x40,0x80,0x100,0x100,0x180,};
+      jj_la1_0 = new int[] {0x80,0x80,0x100,0x100,0x180,};
    }
 
   /** Constructor with InputStream. */

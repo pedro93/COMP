@@ -9,11 +9,9 @@ public interface CNFParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int LF = 4;
-  /** RegularExpression Id. */
   int AT = 5;
   /** RegularExpression Id. */
-  int SYMBOL = 6;
+  int END = 6;
   /** RegularExpression Id. */
   int NonTerm = 7;
   /** RegularExpression Id. */
@@ -26,11 +24,11 @@ public interface CNFParserConstants {
   String[] tokenImage = {
     "<EOF>",
     "\" \"",
+    "\"\\n\"",
     "\"\\r\"",
     "\"\\t\"",
-    "\"\\n\"",
     "\":=\"",
-    "<SYMBOL>",
+    "\"END\"",
     "<NonTerm>",
     "<Term>",
     "\";\"",
