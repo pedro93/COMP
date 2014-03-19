@@ -68,18 +68,9 @@ class SimpleNode implements Node {
      out its children. */
 
   public void dump(String prefix) {
-   // System.out.println(toString(prefix));
-    
-    if(this.Symbol!=null)
-    {
-    	System.out.print(Symbol + "->");
-    	for(int i = 0; i<Variables.size();i++)
-    	{
-    		System.out.print(" "+Variables.elementAt(i));
-    	}
-    	System.out.println();
-    }
-    
+    System.out.println(toString(prefix));
+    if(id!=0)	
+    	System.out.println("  "+Symbol+"->"+Variables.toString());
     if (children != null) {
       for (int i = 0; i < children.length; ++i) {
         SimpleNode n = (SimpleNode)children[i];

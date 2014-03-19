@@ -1,0 +1,3 @@
+S:=NO;
+NO:=ola;
+END
