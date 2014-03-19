@@ -5,15 +5,30 @@ import java.lang.String;
 
 public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFParserConstants {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
- HashMap<String, Vector<String>> SymbolTable = new HashMap<String,Vector<String>>();
+ static HashMap<String, Vector<String>> SymbolTable = new HashMap<String,Vector<String>>();
 
- public static void main(String args[]) throws ParseException {
+public static void main(String args[]) throws ParseException {
          CNFParser myParser = new CNFParser(System.in);
          SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
-         //System.out.println("Valor da expressão: "+myCalc.eval(root)); 
 
+        //Create Symbol Table
+     myParser.createSymbolTable(root);
+
+         System.out.println("Tamanho da hash: "+SymbolTable.size());
          root.dump(""); // imprime no ecrã a árvore 
  }
+
+void createSymbolTable(SimpleNode node) {
+         for(int i=0; i< node.jjtGetNumChildren(); i++) {
+                 createSymbolTable((SimpleNode) node.jjtGetChild(i));
+         }
+         if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
+                   SymbolTable.put(node.Symbol, node.Variables);
+                   return;
+                   }
+
+        return;
+  }
 
   static final public SimpleNode Expression() throws ParseException {
                           /*@bgen(jjtree) Expression */
