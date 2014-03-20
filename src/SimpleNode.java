@@ -12,7 +12,7 @@ class SimpleNode implements Node {
   protected CNFParser parser;
   
   // added
-  public String Symbol;
+  public String Symbol;// = new String();
   public Vector<String> Variables = new Vector<String>();
 
   public SimpleNode(int i) {
@@ -68,7 +68,7 @@ class SimpleNode implements Node {
      out its children. */
 
   public void dump(String prefix) {
-    System.out.println(toString(prefix));
+  //  System.out.println(toString(prefix));
     if(id!=0)	
     	System.out.println("  "+Symbol+"->"+Variables.toString());
     if (children != null) {

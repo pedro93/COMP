@@ -3,23 +3,25 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.lang.String;
 
 public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFParserConstants {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
- static HashMap<String, Vector<String>> SymbolTable = new HashMap<String,Vector<String>>();
+static HashMap<String, List<Vector<String >>> SymbolTable = new HashMap<String,List<Vector<String>>>();
 
 public static void main(String args[]) throws ParseException,FileNotFoundException {
          CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
-         System.out.println("test");
          SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
 
         //Create Symbol Table
      myParser.createSymbolTable(root);
 
          System.out.println("Tamanho da hash: "+SymbolTable.size());
-         root.dump(""); // imprime no ecrã a árvore 
+         root.dump(""); // imprime no ecrã a árvore
+     System.out.println(SymbolTable.toString());
  }
 
 void createSymbolTable(SimpleNode node) {
@@ -27,8 +29,24 @@ void createSymbolTable(SimpleNode node) {
            createSymbolTable((SimpleNode) node.jjtGetChild(i));
         }
         if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
-           SymbolTable.put(node.Symbol, node.Variables);
-        return;
+                        if(node.Variables.size()!=0)
+                        {
+                        List<Vector<String>> aux;
+                        if(SymbolTable.get(node.Symbol)==null)
+                                aux = new LinkedList<Vector<String >>();
+                        else
+                                aux= SymbolTable.get(node.Symbol);
+                                aux.add(node.Variables);
+                                SymbolTable.put(node.Symbol, aux);
+                                return;
+                }
+                System.out.println("Atribui\u00e7\u00e3o inv\u00e1lida!");
+                System.exit(1);
+        }
+        else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
+        {
+                System.out.println("Operador ilegal!");
+                        System.exit(1);
         }
         return;
   }
