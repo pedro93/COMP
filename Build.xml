@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="run" name="Javacc makefile">
+    <echo/>
+	<target name="run" depends="compile">
+		<java classname="CNFParser">
+		    <classpath path="bin"/>
+		</java>
+	</target>
+	<target name="compile" >
+		<jjtree target="src/CNFParser.jjt" outputdirectory="src"
+			javacchome="C:\javacc-5.0" nodeusesparser="true" />
+		<javacc target="src/CNFParser.jjt" outputdirectory="src"
+			javacchome="C:\javacc-5.0" static="true" />
+		<javac includeantruntime="false" srcdir="./src" destdir="bin" />
+	</target>
+</project>
