@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.Vector;
 import java.lang.String;
 
@@ -21,7 +22,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants/*@egen*
 
 /*@egen*/
 
-static HashMap<String, List<Vector<String >>> SymbolTable = new HashMap<String,List<Vector<String>>>();
+static HashMap<Structure, List<Vector<Structure>>> SymbolTable = new HashMap<Structure,List<Vector<Structure>>>();
 
 public static void main(String args[]) throws ParseException,FileNotFoundException { 
 	 CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
@@ -29,6 +30,7 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 
 	//Create Symbol Table
      myParser.createSymbolTable(root);
+     myParser.SemanticAnalysis();
 
 	 System.out.println("Tamanho da hash: "+SymbolTable.size());
 	 root.dump(""); // imprime no ecr\u00e3 a \u00e1rvore
@@ -42,17 +44,20 @@ void createSymbolTable(SimpleNode node) {
         if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
 			if(node.Variables.size()!=0)
 			{
-           		List<Vector<String>> aux;
+           		List<Vector<Structure>> aux;
            		if(SymbolTable.get(node.Symbol)==null)
-           			aux = new LinkedList<Vector<String >>();
+           			aux = new LinkedList<Vector<Structure >>();
            		else
            		  	aux= SymbolTable.get(node.Symbol);
 				aux.add(node.Variables);
 				SymbolTable.put(node.Symbol, aux);
 				return;
        		}
-       		System.out.println("Atribui\u00e7\u00e3o inv\u00e1lida!");
-       		System.exit(1);
+       		else //gramatica n\u00e3o permite chegar a este ponto
+       		{
+	       		System.out.println("Atribui\u00e7\u00e3o inv\u00e1lida na linha "+node.Symbol.line+" ,coluna "+node.Symbol.column);
+	       		System.exit(1);
+       		}
         }
         else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)        {
           	System.out.println("Operador ilegal!"); 
@@ -60,6 +65,25 @@ void createSymbolTable(SimpleNode node) {
         return;
   }
 
+void SemanticAnalysis()
+{
+	List<Vector<Structure>> value;
+	for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
+		value= entry.getValue();
+        for (Vector<Structure> i : value) {
+    	    for(Structure x:i)
+            {
+				if(x.name.substring(0,1).matches("[a-z]"))
+					continue;
+                else if(!SymbolTable.containsKey(x))
+				{
+					System.out.println("Found "+x.type+": " +x.name+" without production in line "+x.line+", coloumn "+x.column);
+					System.exit(1);
+				}
+			}
+		}
+	}
+}
 
  /*
 int eval(SimpleNode node)
@@ -154,11 +178,15 @@ void Atribution():{/*@bgen(jjtree) Atribution */
   //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
       t=<NonTerm> ":="
    {
-   jjtn000.Symbol = new String(t.image);
+   jjtn000.Symbol.name = new String(t.image);
+   jjtn000.Symbol.line=t.beginLine;
+   jjtn000.Symbol.column=t.beginColumn;
+   jjtn000.Symbol.type=Type.NONTERM;
    }
-    (((t1=<NonTerm>{jjtn000.Variables.add(new String(t1.image));})+ (t2=<Term>{jjtn000.Variables.add(new String(t2.image));})*) 
+    (((t1=<NonTerm>{jjtn000.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));})
+ + (t2=<Term>{jjtn000.Variables.add(new Structure(t2.image,Type.TERM,t2.beginLine,t2.beginColumn));})*) 
 	|
- (t1=<Term>{jjtn000.Variables.add(new String(t1.image));})+) ";"/*@bgen(jjtree)*/
+ (t1=<Term>{jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})+) ";"/*@bgen(jjtree)*/
    } finally {
      if (jjtc000) {
        jjtree.closeNodeScope(jjtn000, true);

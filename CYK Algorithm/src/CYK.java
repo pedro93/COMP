@@ -255,10 +255,30 @@ public class CYK {
     }
 
     public static void main(String args[]) throws IOException{
-        loadGrammar("C:\\Users\\Carlos\\Documents\\IntelliJ Workspace\\CYK Algorithm\\src\\grammar");
+        loadGrammar("C:\\Users\\Pedro\\GIT\\COMP\\CYK Algorithm\\src\\grammar");
 
         String input = "bbabaa";
-        wordSize = input.length();
+
+        boolean word = false;
+        int endOfLine = input.length() - 1;
+
+        for (int i = 0; i < input.length(); i++) {
+            // if the char is a letter, word = true.
+            if (Character.isLetter(input.charAt(i)) && i != endOfLine) {
+                word = true;
+                // if char isn't a letter and there have been letters before,
+                // counter goes up.
+            } else if (!Character.isLetter(input.charAt(i)) && word) {
+                wordSize++;
+                word = false;
+                // last word of String; if it doesn't end with a non letter, it
+                // wouldn't count without this.
+            } else if (Character.isLetter(input.charAt(i)) && i == endOfLine) {
+                wordSize++;
+            }
+        }
+
+        wordSize=input.length();
         System.out.println("this " + wordSize);
 
         CYKparser(input);

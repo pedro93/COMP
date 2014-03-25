@@ -12,8 +12,8 @@ class SimpleNode implements Node {
   protected CNFParser parser;
   
   // added
-  public String Symbol;// = new String();
-  public Vector<String> Variables = new Vector<String>();
+  public Structure Symbol = new Structure();
+  public Vector<Structure> Variables = new Vector<Structure>();
 
   public SimpleNode(int i) {
     id = i;
