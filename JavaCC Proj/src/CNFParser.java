@@ -15,15 +15,14 @@ static HashMap<Structure, List<Vector<Structure>>> SymbolTable = new HashMap<Str
 
 public static void main(String args[]) throws ParseException,FileNotFoundException {
          CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
-         SimpleNode root = myParser.Expression(); // Devolve referência para o nó raiz da árvore 
+         SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
 
         //Create Symbol Table
      myParser.createSymbolTable(root);
      myParser.SemanticAnalysis();
 
-         System.out.println("Tamanho da hash: "+SymbolTable.size());
+         System.out.println("Tamanho da tabela de simbolos: "+SymbolTable.size());
          root.dump(""); // imprime no ecrã a árvore
-     System.out.println(SymbolTable.toString());
  }
 
 void createSymbolTable(SimpleNode node) {
@@ -44,13 +43,13 @@ void createSymbolTable(SimpleNode node) {
                 }
                 else //gramatica não permite chegar a este ponto
                 {
-                        System.out.println("Atribui\u00e7\u00e3o inv\u00e1lida na linha "+node.Symbol.line+" ,coluna "+node.Symbol.column);
+                        System.err.println("Atribui\u00e7\u00e3o inv\u00e1lida na linha "+node.Symbol.line+" ,coluna "+node.Symbol.column);
                         System.exit(1);
                 }
         }
         else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
         {
-                System.out.println("Operador ilegal!");
+                System.err.println("Operador ilegal!");
                         System.exit(1);
         }
         return;
@@ -58,6 +57,7 @@ void createSymbolTable(SimpleNode node) {
 
 void SemanticAnalysis()
 {
+  boolean fail=false;
         List<Vector<Structure>> value;
         for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
                 value= entry.getValue();
@@ -68,15 +68,17 @@ void SemanticAnalysis()
                                         continue;
                 else if(!SymbolTable.containsKey(x))
                                 {
-                                        System.out.println("Found "+x.type+": " +x.name+" without production in line "+x.line+", coloumn "+x.column);
-                                        System.exit(1);
+                                        System.err.println("Found "+x.type+": " +x.name+" without production in line "+x.line+", coloumn "+x.column);
+                                        fail=true;
                                 }
                         }
                 }
         }
+        if(fail)
+                System.exit(-1);
 }
 
-  final public SimpleNode Expression() throws ParseException {
+  static final public SimpleNode Expression() throws ParseException {
                           /*@bgen(jjtree) Expression */
   SimpleNode jjtn000 = new SimpleNode(JJTEXPRESSION);
   boolean jjtc000 = true;
