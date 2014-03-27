@@ -2,12 +2,14 @@
 public interface CNFParserTreeConstants
 {
   public int JJTEXPRESSION = 0;
-  public int JJTATRIBUTION = 1;
+  public int JJTSTARTATRIBUTION = 1;
+  public int JJTATRIBUTION = 2;
 
 
   public String[] jjtNodeName = {
     "Expression",
+    "StartAtribution",
     "Atribution",
   };
 }
-/* JavaCC - OriginalChecksum=b1131c9a940e0b594a33d3adb9a22ddf (do not edit this line) */
+/* JavaCC - OriginalChecksum=85a36a957c91f4125548c9283f15ffcb (do not edit this line) */

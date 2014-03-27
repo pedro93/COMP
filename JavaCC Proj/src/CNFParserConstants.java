@@ -9,7 +9,7 @@ public interface CNFParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int AT = 5;
+  int START = 5;
   /** RegularExpression Id. */
   int END = 6;
   /** RegularExpression Id. */
@@ -27,10 +27,11 @@ public interface CNFParserConstants {
     "\"\\n\"",
     "\"\\r\"",
     "\"\\t\"",
-    "\":=\"",
+    "\"START\"",
     "\"END\"",
     "<NonTerm>",
     "<Term>",
+    "\":=\"",
     "\";\"",
   };
 

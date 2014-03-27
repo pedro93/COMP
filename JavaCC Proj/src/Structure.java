@@ -1,5 +1,5 @@
 enum Type {
-	TERM("TERM"), NONTERM("NONTERM"),NULL("NULL");
+	TERM("TERM"), NONTERM("NONTERM"),NULL("NULL"), START("START");
 	
 	private final String name;       
 
