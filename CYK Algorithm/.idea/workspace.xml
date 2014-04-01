@@ -67,10 +67,16 @@
       <file leaf-file-name="CYK.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/CYK.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="852" selection-end="852" vertical-scroll-proportion="1.7288135" vertical-offset="0" max-vertical-offset="4641">
+            <state line="9" column="33" selection-start="216" selection-end="216" vertical-scroll-proportion="0.41129032" vertical-offset="0" max-vertical-offset="5151">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4457#4465#0" expanded="true" />
+                <element signature="e#1121#1129#0" expanded="true" />
+                <element signature="e#1611#1638#0" expanded="true" />
+                <element signature="e#1751#1767#0" expanded="true" />
+                <element signature="e#4309#4317#0" expanded="true" />
+                <element signature="e#4846#4854#0" expanded="true" />
+                <element signature="e#5724#5732#0" expanded="true" />
+                <element signature="e#7445#7453#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -79,7 +85,16 @@
       <file leaf-file-name="grammar" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/grammar">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="7" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="289">
+            <state line="7" column="3" selection-start="60" selection-end="60" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="grammar2" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/grammar2">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="9" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
               <folding />
             </state>
           </provider>
@@ -95,6 +110,7 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/src/grammar2" />
         <option value="$PROJECT_DIR$/src/grammar" />
         <option value="$PROJECT_DIR$/src/CYK.java" />
       </list>
@@ -132,7 +148,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -167,7 +183,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -371,7 +387,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18228404" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.43870014" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35450518" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -400,12 +416,253 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/grammar2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="9" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="306">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="94" column="20" selection-start="2530" selection-end="2530" vertical-scroll-proportion="0.0" vertical-offset="1466" max-vertical-offset="4692">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="9" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="306">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="0" selection-start="1415" selection-end="1415" vertical-scroll-proportion="0.0" vertical-offset="969" max-vertical-offset="3978">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="13" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="3" selection-start="217" selection-end="217" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4386">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="5" selection-start="5" selection-end="5" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="3" selection-start="136" selection-end="136" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="323">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="231" column="49" selection-start="6809" selection-end="6809" vertical-scroll-proportion="0.0" vertical-offset="3752" max-vertical-offset="4403">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="231" column="49" selection-start="6809" selection-end="6809" vertical-scroll-proportion="0.0" vertical-offset="3765" max-vertical-offset="4403">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="31" selection-start="211" selection-end="211" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="4403">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="237" column="32" selection-start="6930" selection-end="6930" vertical-scroll-proportion="0.0" vertical-offset="3616" max-vertical-offset="4267">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="239" column="42" selection-start="6988" selection-end="6988" vertical-scroll-proportion="0.0" vertical-offset="3650" max-vertical-offset="4301">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CYK.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="239" column="42" selection-start="6988" selection-end="6988" vertical-scroll-proportion="0.0" vertical-offset="3821" max-vertical-offset="4301">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="43" selection-end="43" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/CYK.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="112" column="46" selection-start="2985" selection-end="2985" vertical-scroll-proportion="0.0" vertical-offset="1683" max-vertical-offset="4471">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -422,7 +679,13 @@
         <state line="112" column="46" selection-start="2985" selection-end="2985" vertical-scroll-proportion="0.0" vertical-offset="1683" max-vertical-offset="4471">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -439,7 +702,13 @@
         <state line="7" column="24" selection-start="211" selection-end="211" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4471">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -456,7 +725,13 @@
         <state line="106" column="34" selection-start="2746" selection-end="2746" vertical-scroll-proportion="0.0" vertical-offset="1779" max-vertical-offset="4471">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -473,7 +748,13 @@
         <state line="93" column="0" selection-start="2456" selection-end="2456" vertical-scroll-proportion="0.0" vertical-offset="1466" max-vertical-offset="3740">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -490,7 +771,13 @@
         <state line="106" column="49" selection-start="2735" selection-end="2735" vertical-scroll-proportion="0.0" vertical-offset="1529" max-vertical-offset="3672">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -507,7 +794,13 @@
         <state line="99" column="0" selection-start="2288" selection-end="2288" vertical-scroll-proportion="0.0" vertical-offset="1051" max-vertical-offset="2635">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -524,7 +817,13 @@
         <state line="76" column="0" selection-start="1954" selection-end="1954" vertical-scroll-proportion="0.0" vertical-offset="1049" max-vertical-offset="2363">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -541,7 +840,13 @@
         <state line="93" column="0" selection-start="2358" selection-end="2358" vertical-scroll-proportion="0.0" vertical-offset="1581" max-vertical-offset="2244">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -558,7 +863,13 @@
         <state line="56" column="0" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0" vertical-offset="864" max-vertical-offset="1292">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -582,7 +893,13 @@
         <state line="11" column="0" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="408">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -594,13 +911,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/util/Vector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="469" column="0" selection-start="17804" selection-end="17804" vertical-scroll-proportion="0.3317757" vertical-offset="7440" max-vertical-offset="20315">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1906" column="0" selection-start="75404" selection-end="75404" vertical-scroll-proportion="0.33241758" vertical-offset="31720" max-vertical-offset="52292">
@@ -608,26 +918,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/grammar">
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/lang/reflect/Method.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="7" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+        <state line="605" column="0" selection-start="24861" selection-end="24861" vertical-scroll-proportion="0.33248082" vertical-offset="9424" max-vertical-offset="12631" />
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/util/Vector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="469" column="0" selection-start="17804" selection-end="17804" vertical-scroll-proportion="0.0" vertical-offset="7445" max-vertical-offset="20315">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_51/src.zip!/java/lang/reflect/Method.java">
+    <entry file="file://$PROJECT_DIR$/src/grammar">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="605" column="0" selection-start="24861" selection-end="24861" vertical-scroll-proportion="0.33248082" vertical-offset="9424" max-vertical-offset="12631">
+        <state line="7" column="3" selection-start="60" selection-end="60" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/grammar2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="9" selection-start="111" selection-end="111" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CYK.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="852" selection-end="852" vertical-scroll-proportion="1.7288135" vertical-offset="0" max-vertical-offset="4641">
+        <state line="9" column="33" selection-start="216" selection-end="216" vertical-scroll-proportion="0.41129032" vertical-offset="0" max-vertical-offset="5151">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4457#4465#0" expanded="true" />
+            <element signature="e#1121#1129#0" expanded="true" />
+            <element signature="e#1611#1638#0" expanded="true" />
+            <element signature="e#1751#1767#0" expanded="true" />
+            <element signature="e#4309#4317#0" expanded="true" />
+            <element signature="e#4846#4854#0" expanded="true" />
+            <element signature="e#5724#5732#0" expanded="true" />
+            <element signature="e#7445#7453#0" expanded="true" />
           </folding>
         </state>
       </provider>

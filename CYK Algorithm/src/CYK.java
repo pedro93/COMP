@@ -1,25 +1,23 @@
-import sun.plugin.perf.PluginRollup;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Vector;
 
 
 /**
- * Created by Carlos on OFFSET9-03-20OFFSET4.
+ * Created by Carlos on 19-03-14.
  */
 public class CYK {
 
-    static Vector<String> productions;
-    static int wordSize;
+    static Vector<Vector<String>> productions;
+    static int inputSize;
     static final int OFFSET = 1;
 
     public static void loadGrammar(String filename) throws IOException
     {
-        productions = new Vector<String>();
+        productions = new Vector<Vector<String>>();
 
         BufferedReader buffer;
         String line;
@@ -33,20 +31,7 @@ public class CYK {
 
         while((line = buffer.readLine()) != null ) {
 
-            String toAdd = "";
-
-            String split_line[] = line.split("\\s+");
-
-            for(int i = 0; i < split_line.length; i++)
-            {
-                System.out.print(i + ": " + split_line[i] + "  ");
-
-                if(i < split_line.length - OFFSET)
-                    toAdd += split_line[i] + " ";
-                else
-                    toAdd += split_line[i];
-
-            }
+            Vector<String> toAdd = splitString(line);
             System.out.println();
 
             productions.add(toAdd);
@@ -56,100 +41,108 @@ public class CYK {
         System.out.println("These are the productions: " + productions.toString());
     }
 
-    public static boolean CYKparser(String input) {
+    private static Vector<String> splitString(String line) {
+        Vector<String> toAdd = new Vector<String>();
+
+        String split_line[] = line.split("\\s+");
+
+        for(int i = 0; i < split_line.length; i++)
+        {
+            System.out.print(i + ": " + split_line[i] + "  ");
+
+            toAdd.add(split_line[i]);
+
+        }
+        return toAdd;
+    }
+
+    public static boolean CYKparser(Vector<String> toProcess) {
 
         //Tamanho do vector = summatory.
-        String[][] table = new String[(wordSize)][];
+        //String[][] table = new String[(inputSize)][];
 
-        System.out.println("Sum = " + summatory(wordSize));
+        Vector<ArrayList<Vector<String>>> table = new Vector<ArrayList<Vector<String>>>();
 
-        for (int i = 0; i < wordSize; i++){
+        for (int i = 0; i < inputSize; i++){
 
-            table[i] = new String[i+OFFSET];
+            ArrayList<Vector<String>> tableRow = new ArrayList<Vector<String>>(i);
 
             for (int j = 0; j <= i; j++){
 
-                table[i][j] = "";
-                System.out.print("| I: " + i + " J: " + j + "|");
-
+                tableRow.add(new Vector<String>());
             }
-            System.out.println(); // making new line
+            table.add(tableRow);
         }
 
-        System.out.println(Arrays.deepToString(table));
+        printTable(table);
 
-        //Analizar tabela
-
-
-        for(int j = 0; j < wordSize; j++)
-        {
-            table[wordSize-OFFSET][j] = getOFFSETstKeys(input, j);
-        }
-
-        System.out.println(Arrays.deepToString(table));
-
-
-        for(int j = 0; j < wordSize-OFFSET; j++)
-        {
-            //System.out.println("Making Inputs for: " + table[wordSize-OFFSET][j] + " - " + table[wordSize-OFFSET][j+OFFSET]);
-            Vector<String> possibleInputs = makeInputs(table[wordSize-OFFSET][j], table[wordSize-OFFSET][j+OFFSET]);
-            table[wordSize-2][j] = getKeys(possibleInputs);
-        }
-
-        System.out.println(Arrays.deepToString(table));
-
-
-        System.out.println("SEE FROM HERE");
-        System.out.println("SEE FROM HERE");
-        System.out.println("SEE FROM HERE");
-        System.out.println("SEE FROM HERE");
-
-        for(int level = wordSize-3; level >= 0; level--)
+        for(int level = inputSize-1; level >= 0; level--)
         {
             for(int tablePosition = 0; tablePosition <= level; tablePosition++)
             {
                 Vector<String> possibleInputs;
                 possibleInputs = new Vector<String>();
 
-                int combinations =  (wordSize-OFFSET)-level;
+                int combinations =  (inputSize-OFFSET)-level;
                 System.out.println("LEVEL: " + level + " TABLEPOS: " + tablePosition  + " COMBINATIONS: " + combinations);
 
-                for(int z = 0; z < combinations; z++) {
-
-                    System.out.println("OFFSETst is: " + (wordSize-z-OFFSET) + ", " + tablePosition);
-                    System.out.println("2nd is: " + (level+z+OFFSET) + ", " + (tablePosition+z+OFFSET));
-                    System.out.println("OFFSETst: " + table[wordSize-z-OFFSET][tablePosition]);
-                    System.out.println("2nd: " + table[level+z+OFFSET][tablePosition+z+OFFSET]);
-
-
-                    possibleInputs.addAll(makeInputs(table[wordSize-z-OFFSET][tablePosition], table[level+z+OFFSET][tablePosition+z+OFFSET]));
-                    System.out.println("Inputs: ");
-                    System.out.println(possibleInputs.toString());
+                if(level == inputSize-1)
+                {
+                    table.elementAt(inputSize-OFFSET).set(tablePosition, get1stKeys(toProcess, tablePosition));
                 }
+                else {
+                    for(int z = 0; z < combinations; z++) {
 
-                table[level][tablePosition] = getKeys(possibleInputs);
-                System.out.println(Arrays.deepToString(table));
+                        System.out.println("1st is: " + (inputSize-z-OFFSET) + ", " + tablePosition);
+                        System.out.println("2nd is: " + (level+z+OFFSET) + ", " + (tablePosition+z+OFFSET));
+                        System.out.println("1st: " + table.elementAt(inputSize-z-OFFSET).get(tablePosition));
+                        System.out.println("2nd: " + table.elementAt(level+z+OFFSET).get(tablePosition+z+OFFSET));
+
+                        possibleInputs.addAll(makeInputs(table.elementAt(inputSize-z-OFFSET).get(tablePosition), table.elementAt(level+z+OFFSET).get(tablePosition+z+OFFSET)));
+                        System.out.println("Inputs: ");
+                        System.out.println(possibleInputs.toString());
+                    }
+
+                    table.elementAt(level).set(tablePosition, getKeys(possibleInputs));
+                    printTable(table);
+                }
             }
+            printTable(table);
         }
 
-        System.out.println(Arrays.deepToString(table));
 
-        return false;
+        if(table.elementAt(0).get(0).contains(productions.elementAt(0).elementAt(0)))
+            return true;
+        else
+            return false;
     }
 
-    private static Vector<String> makeInputs(String s0, String sOFFSET) {
+    private static void printTable (Vector<ArrayList<Vector<String>>> t) {
 
-        String[] s0inputs = splitInput(s0);
-        String[] sOFFSETinputs = splitInput(sOFFSET);
+        for (int i = 0; i < inputSize; i++){
+
+            for (int j = 0; j <= i; j++){
+
+                System.out.print("| I: " + i + " J: " + j + ": " + t.elementAt(i).get(j).toString() + "|");
+            }
+
+            System.out.println();
+        }
+        System.out.println("--- \\\\ --- ");
+    }
+
+    private static Vector<String> makeInputs(Vector<String> s0, Vector<String> s1) {
 
         Vector<String> ret = new Vector<String>();
 
-        for(int i = 0;  i < s0inputs.length; i++)
+        for(int i = 0;  i < s0.size(); i++)
         {
-            for(int j = 0; j < sOFFSETinputs.length; j++)
+            for(int j = 0; j < s1.size(); j++)
             {
-                if( !s0inputs[i].equals("-") && !sOFFSETinputs[j].equals("-"))
-                    ret.add(s0inputs[i] + sOFFSETinputs[j]);
+                if( !s0.elementAt(i).equals("-") && !s1.elementAt(j).equals("-"))
+                {
+                    ret.add(s0.elementAt(i) + " " + s1.elementAt(j));
+                }
             }
         }
 
@@ -157,12 +150,11 @@ public class CYK {
         return ret;
     }
 
-    private static String getKeys(Vector<String> svec)
+    private static Vector<String> getKeys(Vector<String> svec)
     {
+        Vector<String> rtrn = new Vector<String>();
 
-        String ret = "";
-
-        //System.out.println("SVEC: " + svec.toString());
+        System.out.println("SVEC: " + svec.toString());
 
         for(int k = 0; k < svec.size(); k++)
         {
@@ -173,72 +165,67 @@ public class CYK {
                 String rhs = getRHSProduction(productions.elementAt(i));
                 String lhs = getLHSProduction(productions.elementAt(i));
 
-                //System.out.println( "Comparing: " + rhs + " with " + s + " /");
+                System.out.println( "Comparing: " + rhs + " with " + s + " /");
 
-                if(rhs.equals(s))
+                if(rhs.equals(s) && !rtrn.contains(lhs))
                 {
-                    if(!ret.contains(lhs+"|")) //ISTO PODE DAR ERROS
-                    {
-                        ret += lhs;
-                        ret += "|";
-                    }
+                    rtrn.add(lhs);
                 }
             }
         }
 
-        if(ret.length() == 0)
-            ret += "-";
+        if(rtrn.size() == 0)
+            rtrn.add("-");
 
-        System.out.println("Ret is: " + ret);
-        return ret;
+        System.out.println("Ret is: " + rtrn.toString());
+        return rtrn;
 
     }
 
-    private static String getOFFSETstKeys(String s, int p)
+    private static Vector<String> get1stKeys(Vector<String> vs, int position)
     {
 
-        String ret = "";
+        Vector<String> rtrn = new Vector<String>();
 
-        for (int i = 0; i < productions.size(); i++) {
+        System.out.println("VS IS:" + vs);
 
-            String rhs = getRHSProduction(productions.elementAt(i));
-            String lhs = getLHSProduction(productions.elementAt(i));
+        for(int j = 0; j < productions.size(); j++)
+        {
+            String rhs = getRHSProduction(productions.elementAt(j));
+            String lhs = getLHSProduction(productions.elementAt(j));
 
-            //System.out.println( "Comparing: " + rhs + " with "  + s.substring(p, p+OFFSET) + " /");
+            System.out.println( "Comparing: " + vs.elementAt(position) + " with "  + rhs + " /");
 
-            if(rhs.equals(s.substring(p, p+OFFSET)))
+            if(rhs.toString().equals(vs.elementAt(position)) && !rtrn.contains(lhs))
             {
-                ret += lhs;
-                ret += "|";
+                rtrn.add(lhs);
             }
         }
 
-        System.out.println("Ret is: " + ret);
-        return ret;
+        System.out.println("Ret is: " + rtrn.toString());
+        return rtrn;
 
     }
 
-    private static String getRHSProduction(String production)
+    private static String getRHSProduction(Vector<String> production)
     {
-        return production.substring(production.indexOf("-")+2, production.length());
-    }
+        String rtrn = new String();
 
-    private static String getLHSProduction(String production)
-    {
-        return production.substring(0, production.indexOf("-")-OFFSET);
-    }
-
-    private static int summatory(int length) {
-
-        int sum = 0;
-
-        while(length > 0)
+        for(int i = 2; i < production.size(); i++)
         {
-            sum += length;
-            length--;
+            if(i == production.size()-1)
+                rtrn += production.elementAt(i);
+            else
+                rtrn += production.elementAt(i) + " ";
         }
 
-        return sum;
+        return rtrn;
+
+    }
+
+    private static String getLHSProduction(Vector<String> production)
+    {
+        return production.elementAt(0);
     }
 
 
@@ -254,34 +241,57 @@ public class CYK {
         return split_msg;
     }
 
-    public static void main(String args[]) throws IOException{
-        loadGrammar("C:\\Users\\Pedro\\GIT\\COMP\\CYK Algorithm\\src\\grammar");
+    private static int summatory(int length) {
 
-        String input = "bbabaa";
+        int sum = 0;
 
-        boolean word = false;
-        int endOfLine = input.length() - 1;
-
-        for (int i = 0; i < input.length(); i++) {
-            // if the char is a letter, word = true.
-            if (Character.isLetter(input.charAt(i)) && i != endOfLine) {
-                word = true;
-                // if char isn't a letter and there have been letters before,
-                // counter goes up.
-            } else if (!Character.isLetter(input.charAt(i)) && word) {
-                wordSize++;
-                word = false;
-                // last word of String; if it doesn't end with a non letter, it
-                // wouldn't count without this.
-            } else if (Character.isLetter(input.charAt(i)) && i == endOfLine) {
-                wordSize++;
-            }
+        while(length > 0)
+        {
+            sum += length;
+            length--;
         }
 
-        wordSize=input.length();
-        System.out.println("this " + wordSize);
-
-        CYKparser(input);
+        return sum;
     }
+
+    public static Vector<String> copyOfRange(Vector<String> v, int start, int end) {
+
+        Vector<String> retrn = new Vector<String>();
+
+        if(end <= start)
+        {
+            System.out.println("Error copying range of vector.");
+            return null;
+        }
+
+        for(int i = start; i < end; i++)
+        {
+            retrn.add(v.elementAt(i));
+        }
+
+        return retrn;
+    }
+
+    public static void main(String args[]) throws IOException{
+        loadGrammar("C:\\Users\\Carlos\\Documents\\IntelliJ Workspace\\CYK Algorithm\\src\\grammar2");
+
+        String input = "she eats a fish with a fork";
+
+        Vector<String> toProcess = splitString(input);
+
+        inputSize = toProcess.size();
+        System.out.println("this " + inputSize);
+
+        if(CYKparser(toProcess))
+        {
+            System.out.println("Great Success");
+        }
+        else
+        {
+            System.out.println("LOL NOT");
+        }
+    }
+
+
 
 }
