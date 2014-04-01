@@ -13,6 +13,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
 static HashMap<Structure, List<Vector<Structure>>> SymbolTable = new HashMap<Structure,List<Vector<Structure>>>();
 static Vector<Structure> AcessableTokens = new Vector<Structure>();
+static Vector<String> toProcess = new Vector<String>();
 
 public static void main(String args[]) throws ParseException,FileNotFoundException {
          CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
@@ -25,7 +26,18 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
                         myParser.SemanticAnalysis();
 
                         System.out.println("Symbol table size: "+SymbolTable.size());
-                        root.dump(""); // imprime no ecrã a árvore
+                        root.dump(""); // imprime no ecra a arvore
+                        System.out.println("String to test: "+toProcess.toString());
+                        Algoritm alg = new Algoritm(SymbolTable);
+
+                        if(alg.CYKparser(toProcess))
+                        {
+                                System.out.println("Great Success");
+                        }
+                        else
+                        {
+                                System.out.println("LOL NOT");
+                        }
                 } catch (Exception e) {
                         System.err.println(e.toString());
                         System.exit(-1);
@@ -84,6 +96,10 @@ void createSymbolTable(SimpleNode node) {
                         System.exit(1);
                 }
         }
+        else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
+                {
+                        toProcess.add(node.Symbol.name);
+                }
         else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
         {
                         System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
@@ -160,10 +176,23 @@ void createSymbolTable(SimpleNode node) {
         }
         Atribution();
       }
+      jj_consume_token(STRING);
+      label_3:
+      while (true) {
+        stringToTest();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case Term:
+          ;
+          break;
+        default:
+          jj_la1[2] = jj_gen;
+          break label_3;
+        }
+      }
       jj_consume_token(END);
-                                                      jjtree.closeNodeScope(jjtn000, true);
-                                                      jjtc000 = false;
-                                                     {if (true) return jjtn000;}
+                                                                                  jjtree.closeNodeScope(jjtn000, true);
+                                                                                  jjtc000 = false;
+                                                                                 {if (true) return jjtn000;}
     } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -186,6 +215,26 @@ void createSymbolTable(SimpleNode node) {
     throw new Error("Missing return statement in function");
   }
 
+  static final public void stringToTest() throws ParseException {
+                     /*@bgen(jjtree) stringToTest */
+                     SimpleNode jjtn000 = new SimpleNode(JJTSTRINGTOTEST);
+                     boolean jjtc000 = true;
+                     jjtree.openNodeScope(jjtn000);Token t;
+    try {
+      t = jj_consume_token(Term);
+   jjtree.closeNodeScope(jjtn000, true);
+   jjtc000 = false;
+        jjtn000.Symbol.name = new String(t.image);
+        jjtn000.Symbol.line=t.beginLine;
+        jjtn000.Symbol.column=t.beginColumn;
+        jjtn000.Symbol.type=Type.STRING;
+    } finally {
+   if (jjtc000) {
+     jjtree.closeNodeScope(jjtn000, true);
+   }
+    }
+  }
+
   static final public void StartAtribution() throws ParseException {
                         /*@bgen(jjtree) StartAtribution */
                         SimpleNode jjtn000 = new SimpleNode(JJTSTARTATRIBUTION);
@@ -193,7 +242,7 @@ void createSymbolTable(SimpleNode node) {
                         jjtree.openNodeScope(jjtn000);Token t,t1,t2;
     try {
       t = jj_consume_token(START);
-      jj_consume_token(9);
+      jj_consume_token(10);
                 jjtn000.Symbol.name = new String(t.image);
                 jjtn000.Symbol.line=t.beginLine;
                 jjtn000.Symbol.column=t.beginColumn;
@@ -210,11 +259,11 @@ void createSymbolTable(SimpleNode node) {
                    jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));
         break;
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[3] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-      jj_consume_token(10);
+      jj_consume_token(11);
     } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
@@ -236,7 +285,7 @@ void createSymbolTable(SimpleNode node) {
         //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
       
          t = jj_consume_token(NonTerm);
-      jj_consume_token(9);
+      jj_consume_token(10);
    jjtn000.Symbol.name = new String(t.image);
    jjtn000.Symbol.line=t.beginLine;
    jjtn000.Symbol.column=t.beginColumn;
@@ -253,11 +302,11 @@ void createSymbolTable(SimpleNode node) {
                    jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));
         break;
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[4] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-      jj_consume_token(10);
+      jj_consume_token(11);
     } finally {
      if (jjtc000) {
        jjtree.closeNodeScope(jjtn000, true);
@@ -275,13 +324,13 @@ void createSymbolTable(SimpleNode node) {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[4];
+  static final private int[] jj_la1 = new int[5];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x20,0x80,0x180,0x180,};
+      jj_la1_0 = new int[] {0x20,0x100,0x200,0x300,0x300,};
    }
 
   /** Constructor with InputStream. */
@@ -302,7 +351,7 @@ void createSymbolTable(SimpleNode node) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -317,7 +366,7 @@ void createSymbolTable(SimpleNode node) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -334,7 +383,7 @@ void createSymbolTable(SimpleNode node) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -345,7 +394,7 @@ void createSymbolTable(SimpleNode node) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -361,7 +410,7 @@ void createSymbolTable(SimpleNode node) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -371,7 +420,7 @@ void createSymbolTable(SimpleNode node) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -422,12 +471,12 @@ void createSymbolTable(SimpleNode node) {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[11];
+    boolean[] la1tokens = new boolean[12];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -436,7 +485,7 @@ void createSymbolTable(SimpleNode node) {
         }
       }
     }
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 12; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

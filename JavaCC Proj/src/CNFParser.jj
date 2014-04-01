@@ -24,6 +24,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants/*@egen*
 
 static HashMap<Structure, List<Vector<Structure>>> SymbolTable = new HashMap<Structure,List<Vector<Structure>>>();
 static Vector<Structure> AcessableTokens = new Vector<Structure>();
+static Vector<String> toProcess = new Vector<String>();
 
 public static void main(String args[]) throws ParseException,FileNotFoundException { 
 	 CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
@@ -36,7 +37,18 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 			myParser.SemanticAnalysis();
 
 			System.out.println("Symbol table size: "+SymbolTable.size());
-			root.dump(""); // imprime no ecr\u00e3 a \u00e1rvore
+			root.dump(""); // imprime no ecra a arvore
+			System.out.println("String to test: "+toProcess.toString());
+			Algoritm alg = new Algoritm(SymbolTable);
+
+			if(alg.CYKparser(toProcess))
+			{
+				System.out.println("Great Success");
+			}
+			else
+			{
+				System.out.println("LOL NOT");
+			}
 		} catch (Exception e) {
 			System.err.println(e.toString());
 			System.exit(-1);
@@ -94,6 +106,10 @@ void createSymbolTable(SimpleNode node) {
 	       		System.exit(1);
        		}
         }
+       	else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
+		{
+			toProcess.add(node.Symbol.name);
+		}
         else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)        {
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
 	 		System.exit(1);        }
@@ -150,6 +166,7 @@ TOKEN:
  //Permite-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
  < START: "START" >|
  < END: "END" >|
+ < STRING: "STRING:">|
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
  < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
 }
@@ -162,11 +179,11 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
 {/*@bgen(jjtree) Expression */
         try {
 /*@egen*/
-	(StartAtribution())+ (Atribution())* < END >/*@bgen(jjtree)*/
-                                                    {
-                                                      jjtree.closeNodeScope(jjtn000, true);
-                                                      jjtc000 = false;
-                                                    }
+	(StartAtribution())+ (Atribution())* < STRING > (stringToTest())+< END >/*@bgen(jjtree)*/
+                                                                                {
+                                                                                  jjtree.closeNodeScope(jjtn000, true);
+                                                                                  jjtc000 = false;
+                                                                                }
 /*@egen*/{return jjtn000;}/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {
@@ -188,6 +205,32 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
           }
         }
 /*@egen*/ // c\u00f3digo Java entre chavetas 
+}
+
+void stringToTest():{/*@bgen(jjtree) stringToTest */
+                     SimpleNode jjtn000 = new SimpleNode(JJTSTRINGTOTEST);
+                     boolean jjtc000 = true;
+                     jjtree.openNodeScope(jjtn000);
+/*@egen*/Token t;}{/*@bgen(jjtree) stringToTest */
+ try {
+/*@egen*/
+ t=< Term >/*@bgen(jjtree)*/
+ {
+   jjtree.closeNodeScope(jjtn000, true);
+   jjtc000 = false;
+ }
+/*@egen*/
+ {
+ 	jjtn000.Symbol.name = new String(t.image);
+	jjtn000.Symbol.line=t.beginLine;
+	jjtn000.Symbol.column=t.beginColumn;
+	jjtn000.Symbol.type=Type.STRING;  }/*@bgen(jjtree)*/
+ } finally {
+   if (jjtc000) {
+     jjtree.closeNodeScope(jjtn000, true);
+   }
+ }
+/*@egen*/
 }
 
 void StartAtribution():{/*@bgen(jjtree) StartAtribution */

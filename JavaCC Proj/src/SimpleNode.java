@@ -14,6 +14,7 @@ class SimpleNode implements Node {
   // added
   public Structure Symbol = new Structure();
   public Vector<Structure> Variables = new Vector<Structure>();
+  public String subStringToTest=new String();
 
   public SimpleNode(int i) {
     id = i;

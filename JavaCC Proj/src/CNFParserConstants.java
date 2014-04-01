@@ -13,9 +13,11 @@ public interface CNFParserConstants {
   /** RegularExpression Id. */
   int END = 6;
   /** RegularExpression Id. */
-  int NonTerm = 7;
+  int STRING = 7;
   /** RegularExpression Id. */
-  int Term = 8;
+  int NonTerm = 8;
+  /** RegularExpression Id. */
+  int Term = 9;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -29,6 +31,7 @@ public interface CNFParserConstants {
     "\"\\t\"",
     "\"START\"",
     "\"END\"",
+    "\"STRING:\"",
     "<NonTerm>",
     "<Term>",
     "\":=\"",

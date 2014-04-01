@@ -273,7 +273,7 @@ public class CYK {
     }
 
     public static void main(String args[]) throws IOException{
-        loadGrammar("C:\\Users\\Carlos\\Documents\\IntelliJ Workspace\\CYK Algorithm\\src\\grammar2");
+        loadGrammar("C:\\Users\\Pedro\\GIT\\COMP\\CYK Algorithm\\src\\grammar2");
 
         String input = "she eats a fish with a fork";
 

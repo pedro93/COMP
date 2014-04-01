@@ -20,6 +20,7 @@ public class CNFParser
 
 static HashMap<Structure, List<Vector<Structure>>> SymbolTable = new HashMap<Structure,List<Vector<Structure>>>();
 static Vector<Structure> AcessableTokens = new Vector<Structure>();
+static Vector<String> toProcess = new Vector<String>();
 
 public static void main(String args[]) throws ParseException,FileNotFoundException { 
 	 CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
@@ -32,7 +33,17 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 			myParser.SemanticAnalysis();
 
 			System.out.println("Symbol table size: "+SymbolTable.size());
-			root.dump(""); // imprime no ecrã a árvore
+			root.dump(""); // imprime no ecra a arvore
+
+			Algoritm alg = new Algoritm(SymbolTable);
+			if(alg.CYKparser(toProcess))
+			{
+				System.out.println("Great Success");
+			}
+			else
+			{
+				System.out.println("LOL NOT");
+			}
 		} catch (Exception e) {
 			System.err.println(e.toString());
 			System.exit(-1);
@@ -90,6 +101,10 @@ void createSymbolTable(SimpleNode node) {
 	       		System.exit(1);
        		}
         }
+       	else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
+		{
+			toProcess.add(node.Symbol.name);
+		}
         else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)        {
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
 	 		System.exit(1);        }
@@ -146,13 +161,23 @@ TOKEN:
  //Permite-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
  < START: "START" >|
  < END: "END" >|
+ < STRING: "STRING:">|
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
  < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
 }
  
 SimpleNode Expression(): {} 
 {
-	(StartAtribution())+ (Atribution())* < END >{return jjtThis;} // código Java entre chavetas 
+	(StartAtribution())+ (Atribution())* < STRING > (stringToTest())+< END >{return jjtThis;} // código Java entre chavetas 
+}
+
+void stringToTest():{Token t;}{
+ t=< Term >
+ {
+ 	jjtThis.Symbol.name = new String(t.image);
+	jjtThis.Symbol.line=t.beginLine;
+	jjtThis.Symbol.column=t.beginColumn;
+	jjtThis.Symbol.type=Type.STRING;  }
 }
 
 void StartAtribution():{Token t,t1,t2;}
