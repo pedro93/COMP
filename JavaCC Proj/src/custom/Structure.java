@@ -1,3 +1,5 @@
+package custom;
+
 enum Type {
 	TERM("TERM"), NONTERM("NONTERM"),NULL("NULL"), START("START"), STRING("STRING ELEMENT");
 	
@@ -17,7 +19,7 @@ enum Type {
 	}
 }
 
-public class Structure {	 
+public class Structure implements Comparable<Structure>{	 
 	public String name;
 	public Type type;
 	public int line;
@@ -52,6 +54,10 @@ public class Structure {
 	public boolean equals(Object obj) {
 	    Structure u=(Structure) obj;
 		return (name.equals(u.name) && type==u.type);
+	}
+	@Override
+	public int compareTo(Structure o) {
+		return Integer.compare(line, o.line); // in Java 7
 	}
 
 }

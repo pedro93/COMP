@@ -2,21 +2,21 @@
 import java.io.FileInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.lang.String;
 
 public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFParserConstants {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
-static HashMap<Structure, List<Vector<Structure>>> SymbolTable = new HashMap<Structure,List<Vector<Structure>>>();
+static TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
 static Vector<Structure> AcessableTokens = new Vector<Structure>();
 static Vector<String> toProcess = new Vector<String>();
 
 public static void main(String args[]) throws ParseException,FileNotFoundException {
-         CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
+         CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar2.txt")));
 
          try {
                         SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
@@ -27,9 +27,8 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 
                         System.out.println("Symbol table size: "+SymbolTable.size());
                         root.dump(""); // imprime no ecra a arvore
-                        System.out.println("String to test: "+toProcess.toString());
-                        Algoritm alg = new Algoritm(SymbolTable);
 
+                        Algoritm alg = new Algoritm(SymbolTable);
                         if(alg.CYKparser(toProcess))
                         {
                                 System.out.println("Great Success");
