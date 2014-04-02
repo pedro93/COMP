@@ -15,7 +15,6 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.lang.String;
 
-
 public class CNFParser 
 {
 
@@ -34,7 +33,7 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 			myParser.SemanticAnalysis();
 
 			System.out.println("Symbol table size: "+SymbolTable.size());
-			root.dump(""); // imprime no ecra a arvore
+			root.dump(""); // imprime no ecra a arvore //dump do executavel
 
 			Algoritm alg = new Algoritm(SymbolTable);
 			if(alg.CYKparser(toProcess))
@@ -181,7 +180,7 @@ void stringToTest():{Token t;}{
 	jjtThis.Symbol.type=Type.STRING;  }
 }
 
-void StartAtribution():{Token t,t1,t2;}
+void StartAtribution #void:{Token t,t1,t2;}
 {	t=<START> ":="
 	{
 		jjtThis.Symbol.name = new String(t.image);
@@ -190,7 +189,7 @@ void StartAtribution():{Token t,t1,t2;}
 		jjtThis.Symbol.type=Type.START;
 	}
 
-	((t1=<NonTerm >
+	((t1=<NonTerm > #t1
 	{jjtThis.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));}	t2=<NonTerm >
 	{jjtThis.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));})
 	|

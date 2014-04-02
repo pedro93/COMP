@@ -16,7 +16,6 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.lang.String;
 
-
 public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants/*@egen*/ 
 {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
