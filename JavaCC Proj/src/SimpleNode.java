@@ -68,8 +68,8 @@ class SimpleNode implements Node {
   /* Override this method if you want to customize how the node dumps
      out its children. */
 
+
   public void dump(String prefix) {
-  //  System.out.println(toString(prefix));
     if(id!=0)	
     	System.out.println("  "+Symbol+"->"+Variables.toString());
     if (children != null) {

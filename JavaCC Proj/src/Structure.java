@@ -1,5 +1,3 @@
-package custom;
-
 enum Type {
 	TERM("TERM"), NONTERM("NONTERM"),NULL("NULL"), START("START"), STRING("STRING ELEMENT");
 	

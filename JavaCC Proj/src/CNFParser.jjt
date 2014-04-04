@@ -27,7 +27,7 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 	 CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar2.txt")));
 
 	 try {
-			SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
+			SimpleNode root = myParser.Expression(); // devolve referï¿½ncia para o nï¿½ raiz da ï¿½rvore 
 
 			//Create Symbol Table
 			myParser.createSymbolTable(root);
@@ -72,7 +72,7 @@ void createSymbolTable(SimpleNode node) {
 				}
 				return;
        		}
-       		else //gramatica não permite chegar a este ponto
+       		else //gramatica nï¿½o permite chegar a este ponto
        		{
 	       		System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 	       		System.exit(1);
@@ -96,7 +96,7 @@ void createSymbolTable(SimpleNode node) {
 				}
 				return;
        		}
-       		else //gramatica não permite chegar a este ponto
+       		else //gramatica nï¿½o permite chegar a este ponto
        		{
 	       		System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 	       		System.exit(1);
@@ -161,6 +161,8 @@ TOKEN:
 {
  //Permite-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
  < START: "START" >|
+ < ASSIGN: ":=">|
+ < ENDPROD: ";">|
  < END: "END" >|
  < STRING: "STRING:">|
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
@@ -169,7 +171,7 @@ TOKEN:
  
 SimpleNode Expression(): {} 
 {
-	(StartAtribution())+ (Atribution())* < STRING > (stringToTest())+< END >{return jjtThis;} // código Java entre chavetas 
+	(StartAtribution())+ (Atribution())* < STRING > (stringToTest())+< END >{return jjtThis;} // cï¿½digo Java entre chavetas 
 }
 
 void stringToTest():{Token t;}{
@@ -182,7 +184,7 @@ void stringToTest():{Token t;}{
 }
 
 void StartAtribution():{Token t,t1,t2;}
-{	t=<START> ":="
+{	t=<START> < ASSIGN >
 	{
 		jjtThis.Symbol.name = new String(t.image);
 		jjtThis.Symbol.line=t.beginLine;
@@ -194,7 +196,7 @@ void StartAtribution():{Token t,t1,t2;}
 	{jjtThis.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));}	t2=<NonTerm >
 	{jjtThis.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));})
 	|
-	(t1=<Term>{jjtThis.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) ";"
+	(t1=<Term>{jjtThis.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) <ENDPROD >
 	
    /*
 	(((t1=<NonTerm>{jjtThis.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));})
@@ -211,7 +213,7 @@ void Atribution():{Token t,t1,t2;}
   //VP:= e o gato
   
   //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
-      t=<NonTerm> ":="
+      t=<NonTerm> < ASSIGN > 
    {
    jjtThis.Symbol.name = new String(t.image);
    jjtThis.Symbol.line=t.beginLine;
@@ -224,7 +226,7 @@ void Atribution():{Token t,t1,t2;}
 	t2=<NonTerm >
 	{jjtThis.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));})
 	|
-	(t1=<Term>{jjtThis.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) ";"
+	(t1=<Term>{jjtThis.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) < ENDPROD>
    /* (((t1=<NonTerm>{jjtThis.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));})
  + (t2=<Term>{jjtThis.Variables.add(new Structure(t2.image,Type.TERM,t2.beginLine,t2.beginColumn));})*) 
 	|

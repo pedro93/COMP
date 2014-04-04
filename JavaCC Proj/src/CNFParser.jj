@@ -31,7 +31,7 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
 	 CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar2.txt")));
 
 	 try {
-			SimpleNode root = myParser.Expression(); // devolve refer\u00eancia para o n\u00f3 raiz da \u00e1rvore 
+			SimpleNode root = myParser.Expression(); // devolve refer\ufffd\ufffd\ufffdncia para o n\ufffd\ufffd\ufffd raiz da \ufffd\ufffd\ufffdrvore 
 
 			//Create Symbol Table
 			myParser.createSymbolTable(root);
@@ -76,7 +76,7 @@ void createSymbolTable(SimpleNode node) {
 				}
 				return;
        		}
-       		else //gramatica n\u00e3o permite chegar a este ponto
+       		else //gramatica n\ufffd\ufffd\ufffdo permite chegar a este ponto
        		{
 	       		System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 	       		System.exit(1);
@@ -100,7 +100,7 @@ void createSymbolTable(SimpleNode node) {
 				}
 				return;
        		}
-       		else //gramatica n\u00e3o permite chegar a este ponto
+       		else //gramatica n\ufffd\ufffd\ufffdo permite chegar a este ponto
        		{
 	       		System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 	       		System.exit(1);
@@ -165,6 +165,8 @@ TOKEN:
 {
  //Permite-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
  < START: "START" >|
+ < ASSIGN: ":=">|
+ < ENDPROD: ";">|
  < END: "END" >|
  < STRING: "STRING:">|
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
@@ -204,7 +206,7 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
             jjtree.closeNodeScope(jjtn000, true);
           }
         }
-/*@egen*/ // c\u00f3digo Java entre chavetas 
+/*@egen*/ // c\ufffd\ufffd\ufffddigo Java entre chavetas 
 }
 
 void stringToTest():{/*@bgen(jjtree) stringToTest */
@@ -240,7 +242,7 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
 /*@egen*/Token t,t1,t2;}
 {/*@bgen(jjtree) StartAtribution */
         try {
-/*@egen*/	t=<START> ":="
+/*@egen*/	t=<START> < ASSIGN >
 	{
 		jjtn000.Symbol.name = new String(t.image);
 		jjtn000.Symbol.line=t.beginLine;
@@ -252,7 +254,7 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
 	{jjtn000.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));}	t2=<NonTerm >
 	{jjtn000.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));})
 	|
-	(t1=<Term>{jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) ";"/*@bgen(jjtree)*/
+	(t1=<Term>{jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) <ENDPROD >/*@bgen(jjtree)*/
         } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
@@ -281,7 +283,7 @@ void Atribution():{/*@bgen(jjtree) Atribution */
   //VP:= e o gato
   
   //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
-      t=<NonTerm> ":="
+      t=<NonTerm> < ASSIGN > 
    {
    jjtn000.Symbol.name = new String(t.image);
    jjtn000.Symbol.line=t.beginLine;
@@ -294,7 +296,7 @@ void Atribution():{/*@bgen(jjtree) Atribution */
 	t2=<NonTerm >
 	{jjtn000.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));})
 	|
-	(t1=<Term>{jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) ";"/*@bgen(jjtree)*/
+	(t1=<Term>{jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));})) < ENDPROD>/*@bgen(jjtree)*/
    } finally {
      if (jjtc000) {
        jjtree.closeNodeScope(jjtn000, true);

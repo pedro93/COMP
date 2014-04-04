@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.lang.String;
 
+
 public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFParserConstants {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
 static TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
@@ -19,7 +20,7 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
          CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar2.txt")));
 
          try {
-                        SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da árvore 
+                        SimpleNode root = myParser.Expression(); // devolve refer???ncia para o n??? raiz da ???rvore 
 
                         //Create Symbol Table
                         myParser.createSymbolTable(root);
@@ -65,7 +66,7 @@ void createSymbolTable(SimpleNode node) {
                                 }
                                 return;
                 }
-                else //gramatica não permite chegar a este ponto
+                else //gramatica n???o permite chegar a este ponto
                 {
                         System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                         System.exit(1);
@@ -89,7 +90,7 @@ void createSymbolTable(SimpleNode node) {
                                 }
                                 return;
                 }
-                else //gramatica não permite chegar a este ponto
+                else //gramatica n???o permite chegar a este ponto
                 {
                         System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                         System.exit(1);
@@ -241,7 +242,7 @@ void createSymbolTable(SimpleNode node) {
                         jjtree.openNodeScope(jjtn000);Token t,t1,t2;
     try {
       t = jj_consume_token(START);
-      jj_consume_token(10);
+      jj_consume_token(ASSIGN);
                 jjtn000.Symbol.name = new String(t.image);
                 jjtn000.Symbol.line=t.beginLine;
                 jjtn000.Symbol.column=t.beginColumn;
@@ -262,7 +263,7 @@ void createSymbolTable(SimpleNode node) {
         jj_consume_token(-1);
         throw new ParseException();
       }
-      jj_consume_token(11);
+      jj_consume_token(ENDPROD);
     } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
@@ -284,7 +285,7 @@ void createSymbolTable(SimpleNode node) {
         //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
       
          t = jj_consume_token(NonTerm);
-      jj_consume_token(10);
+      jj_consume_token(ASSIGN);
    jjtn000.Symbol.name = new String(t.image);
    jjtn000.Symbol.line=t.beginLine;
    jjtn000.Symbol.column=t.beginColumn;
@@ -305,7 +306,7 @@ void createSymbolTable(SimpleNode node) {
         jj_consume_token(-1);
         throw new ParseException();
       }
-      jj_consume_token(11);
+      jj_consume_token(ENDPROD);
     } finally {
      if (jjtc000) {
        jjtree.closeNodeScope(jjtn000, true);
@@ -329,7 +330,7 @@ void createSymbolTable(SimpleNode node) {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x20,0x100,0x200,0x300,0x300,};
+      jj_la1_0 = new int[] {0x20,0x400,0x800,0xc00,0xc00,};
    }
 
   /** Constructor with InputStream. */
