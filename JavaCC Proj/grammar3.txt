@@ -1,0 +1,5 @@
+START:=A;
+A:=a;
+STRING:
+a b
+END
