@@ -16,18 +16,19 @@ static TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Str
 static Vector<Structure> AcessableTokens = new Vector<Structure>();
 static Vector<String> toProcess = new Vector<String>();
 
-public static void main(String args[]) throws ParseException,FileNotFoundException {
-         CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar2.txt")));
+public static void main(String args[]) throws FileNotFoundException{
+        try {
+                        CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
 
-         try {
-                        SimpleNode root = myParser.Expression(); // devolve refer???ncia para o n??? raiz da ???rvore 
+                        SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da àrvore 
 
                         //Create Symbol Table
                         myParser.createSymbolTable(root);
                         myParser.SemanticAnalysis();
 
                         System.out.println("Symbol table size: "+SymbolTable.size());
-                        root.dump(""); // imprime no ecra a arvore
+                        printSymbolTable();
+                        //root.dump(""); // imprime no ecra a arvore
 
                         Algoritm alg = new Algoritm(SymbolTable);
                         if(alg.CYKparser(toProcess))
@@ -38,26 +39,58 @@ public static void main(String args[]) throws ParseException,FileNotFoundExcepti
                         {
                                 System.out.println("LOL NOT");
                         }
+
+                        //ChomskyConverter chomsky = new ChomskyConverter(SymbolTable) ;
+                        //chomsky.CNFconverter() ;
+
                 } catch (Exception e) {
-                        System.err.println(e.toString());
-                        System.exit(-1);
+                        System.out.println(e.toString());
+                        e.printStackTrace();
+                        System.exit(0);
                 }
  }
 
+static void printSymbolTable()
+        {
+                List<Vector<Structure>> value;
+                Structure key;
+                System.out.println("TreeHash");
+                for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet())
+                {
+                        value=entry.getValue();
+                        key=entry.getKey();
+                        System.out.print("\u005ctKey: "+key.toString()+"\u005cn\u005ct\u005ctValues:");
+                        for (Vector<Structure> i : value) {
+                                System.out.print("[");
+                                for(Structure x:i)
+                                {
+                                        System.out.print(x.toString()+",");
+                                }
+                                System.out.print("]");
+                        }
+                        System.out.println();
+                }
+        }
+
 void createSymbolTable(SimpleNode node) {
-        for(int i=0; i< node.jjtGetNumChildren(); i++) {
-           createSymbolTable((SimpleNode) node.jjtGetChild(i));
-        }
-        if(node.id == CNFParserTreeConstants.JJTSTARTATRIBUTION) {
+                for(int i=0; i< node.jjtGetNumChildren(); i++) {
+                        createSymbolTable((SimpleNode) node.jjtGetChild(i));
+                }
+                if(node.id == CNFParserTreeConstants.JJTSTARTATRIBUTION) {
                         if(node.Variables.size()!=0)
                         {
-                        List<Vector<Structure>> aux;
-                        if(SymbolTable.get(node.Symbol)==null)
-                                aux = new LinkedList<Vector<Structure >>();
-                        else
-                                aux= SymbolTable.get(node.Symbol);
-                                aux.add(node.Variables);
-                                SymbolTable.put(node.Symbol, aux);
+                                List<Vector<Structure>> aux;
+                                if(SymbolTable.get(node.Symbol)==null)
+                                {
+                                        SymbolTable.put(node.Symbol, node.Variables);
+                                }
+                                else
+                                {
+                                        aux = SymbolTable.get(node.Symbol);
+                                        for(Vector<Structure> temp: node.Variables)
+                                                aux.add(temp);
+                                }
+                                aux = node.Variables;
                                 for (Vector<Structure> temp : aux) {
                                         for (Structure struct : temp) {
                                                 if(!AcessableTokens.contains(struct))
@@ -65,23 +98,28 @@ void createSymbolTable(SimpleNode node) {
                                         }
                                 }
                                 return;
+                        }
+                        else //gramatica não permite chegar a este ponto
+                        {
+                                System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
+                                System.exit(1);
+                        }
                 }
-                else //gramatica n???o permite chegar a este ponto
-                {
-                        System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
-                        System.exit(1);
-                }
-        }
-        else if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
+                else if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
                         if(node.Variables.size()!=0)
                         {
-                        List<Vector<Structure>> aux;
-                        if(SymbolTable.get(node.Symbol)==null)
-                                aux = new LinkedList<Vector<Structure >>();
-                        else
-                                aux= SymbolTable.get(node.Symbol);
-                                aux.add(node.Variables);
-                                SymbolTable.put(node.Symbol, aux);
+                                List<Vector<Structure>> aux;
+                                if(SymbolTable.get(node.Symbol)==null)
+                                {
+                                        SymbolTable.put(node.Symbol, node.Variables);
+                                }
+                                else
+                                {
+                                        aux = SymbolTable.get(node.Symbol);
+                                        for(Vector<Structure> temp: node.Variables)
+                                                aux.add(temp);
+                                }
+                                aux = node.Variables;
                                 for (Vector<Structure> temp : aux) {
                                         for (Structure struct : temp) {
                                                 if(!AcessableTokens.contains(struct))
@@ -89,24 +127,24 @@ void createSymbolTable(SimpleNode node) {
                                         }
                                 }
                                 return;
+                        }
+                        else //gramatica não permite chegar a este ponto
+                        {
+                                System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
+                                System.exit(1);
+                        }
                 }
-                else //gramatica n???o permite chegar a este ponto
-                {
-                        System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
-                        System.exit(1);
-                }
-        }
-        else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
+                else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
                 {
                         toProcess.add(node.Symbol.name);
                 }
-        else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
-        {
+                else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
+                {
                         System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
                         System.exit(1);
+                }
+                return;
         }
-        return;
-  }
 
         void SemanticAnalysis()
         {
@@ -148,9 +186,9 @@ void createSymbolTable(SimpleNode node) {
 
   static final public SimpleNode Expression() throws ParseException {
                           /*@bgen(jjtree) Expression */
-  SimpleNode jjtn000 = new SimpleNode(JJTEXPRESSION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+                          SimpleNode jjtn000 = new SimpleNode(JJTEXPRESSION);
+                          boolean jjtc000 = true;
+                          jjtree.openNodeScope(jjtn000);Token t;
     try {
       label_1:
       while (true) {
@@ -237,31 +275,80 @@ void createSymbolTable(SimpleNode node) {
 
   static final public void StartAtribution() throws ParseException {
                         /*@bgen(jjtree) StartAtribution */
-                        SimpleNode jjtn000 = new SimpleNode(JJTSTARTATRIBUTION);
-                        boolean jjtc000 = true;
-                        jjtree.openNodeScope(jjtn000);Token t,t1,t2;
+                         SimpleNode jjtn000 = new SimpleNode(JJTSTARTATRIBUTION);
+                         boolean jjtc000 = true;
+                         jjtree.openNodeScope(jjtn000);Token lhs,rhs;
     try {
-      t = jj_consume_token(START);
+      lhs = jj_consume_token(START);
       jj_consume_token(ASSIGN);
-                jjtn000.Symbol.name = new String(t.image);
-                jjtn000.Symbol.line=t.beginLine;
-                jjtn000.Symbol.column=t.beginColumn;
+                jjtn000.Symbol.name = new String(lhs.image);
+                jjtn000.Symbol.line=lhs.beginLine;
+                jjtn000.Symbol.column=lhs.beginColumn;
                 jjtn000.Symbol.type=Type.START;
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NonTerm:
-        t1 = jj_consume_token(NonTerm);
-         jjtn000.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));
-        t2 = jj_consume_token(NonTerm);
-         jjtn000.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));
-        break;
-      case Term:
-        t1 = jj_consume_token(Term);
-                   jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));
-        break;
-      default:
-        jj_la1[3] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+      label_4:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case Term:
+          rhs = jj_consume_token(Term);
+                           jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));
+          break;
+        case NonTerm:
+          rhs = jj_consume_token(NonTerm);
+                              jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));
+          break;
+        default:
+          jj_la1[3] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NonTerm:
+        case Term:
+          ;
+          break;
+        default:
+          jj_la1[4] = jj_gen;
+          break label_4;
+        }
+      }
+      label_5:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case OR:
+          ;
+          break;
+        default:
+          jj_la1[5] = jj_gen;
+          break label_5;
+        }
+        jj_consume_token(OR);
+         jjtn000.Variables.add(new Vector<Structure >());
+        label_6:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case Term:
+            rhs = jj_consume_token(Term);
+                                   jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));
+            break;
+          case NonTerm:
+            rhs = jj_consume_token(NonTerm);
+                                      jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));
+            break;
+          default:
+            jj_la1[6] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case NonTerm:
+          case Term:
+            ;
+            break;
+          default:
+            jj_la1[7] = jj_gen;
+            break label_6;
+          }
+        }
       }
       jj_consume_token(ENDPROD);
     } finally {
@@ -275,42 +362,84 @@ void createSymbolTable(SimpleNode node) {
                    /*@bgen(jjtree) Atribution */
                    SimpleNode jjtn000 = new SimpleNode(JJTATRIBUTION);
                    boolean jjtc000 = true;
-                   jjtree.openNodeScope(jjtn000);Token t,t1,t2;
+                   jjtree.openNodeScope(jjtn000);Token lhs,rhs;
     try {
-      //S:= tu e o gato NP VP
-        //VP:=Det
-        //Det:= tu
-        //VP:= e o gato
-      
-        //SYMBOL:=(NonTerm)+ (Term)* | (Term)+;
-      
-         t = jj_consume_token(NonTerm);
+      lhs = jj_consume_token(NonTerm);
       jj_consume_token(ASSIGN);
-   jjtn000.Symbol.name = new String(t.image);
-   jjtn000.Symbol.line=t.beginLine;
-   jjtn000.Symbol.column=t.beginColumn;
-   jjtn000.Symbol.type=Type.NONTERM;
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NonTerm:
-        t1 = jj_consume_token(NonTerm);
-         jjtn000.Variables.add(new Structure(t1.image,Type.NONTERM,t1.beginLine,t1.beginColumn));
-        t2 = jj_consume_token(NonTerm);
-         jjtn000.Variables.add(new Structure(t2.image,Type.NONTERM,t2.beginLine,t2.beginColumn));
-        break;
-      case Term:
-        t1 = jj_consume_token(Term);
-                   jjtn000.Variables.add(new Structure(t1.image,Type.TERM,t1.beginLine,t1.beginColumn));
-        break;
-      default:
-        jj_la1[4] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+                jjtn000.Symbol.name = new String(lhs.image);
+                jjtn000.Symbol.line=lhs.beginLine;
+                jjtn000.Symbol.column=lhs.beginColumn;
+                jjtn000.Symbol.type=Type.NONTERM;
+      label_7:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case Term:
+          rhs = jj_consume_token(Term);
+                           jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));
+          break;
+        case NonTerm:
+          rhs = jj_consume_token(NonTerm);
+                              jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));
+          break;
+        default:
+          jj_la1[8] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NonTerm:
+        case Term:
+          ;
+          break;
+        default:
+          jj_la1[9] = jj_gen;
+          break label_7;
+        }
+      }
+      label_8:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case OR:
+          ;
+          break;
+        default:
+          jj_la1[10] = jj_gen;
+          break label_8;
+        }
+        jj_consume_token(OR);
+         jjtn000.Variables.add(new Vector<Structure >());
+        label_9:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case Term:
+            rhs = jj_consume_token(Term);
+                                   jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));
+            break;
+          case NonTerm:
+            rhs = jj_consume_token(NonTerm);
+                                      jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));
+            break;
+          default:
+            jj_la1[11] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case NonTerm:
+          case Term:
+            ;
+            break;
+          default:
+            jj_la1[12] = jj_gen;
+            break label_9;
+          }
+        }
       }
       jj_consume_token(ENDPROD);
     } finally {
-     if (jjtc000) {
-       jjtree.closeNodeScope(jjtn000, true);
-     }
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
     }
   }
 
@@ -324,13 +453,13 @@ void createSymbolTable(SimpleNode node) {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[5];
+  static final private int[] jj_la1 = new int[13];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x20,0x400,0x800,0xc00,0xc00,};
+      jj_la1_0 = new int[] {0x20,0x800,0x1000,0x1800,0x1800,0x200,0x1800,0x1800,0x1800,0x1800,0x200,0x1800,0x1800,};
    }
 
   /** Constructor with InputStream. */
@@ -351,7 +480,7 @@ void createSymbolTable(SimpleNode node) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -366,7 +495,7 @@ void createSymbolTable(SimpleNode node) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -383,7 +512,7 @@ void createSymbolTable(SimpleNode node) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -394,7 +523,7 @@ void createSymbolTable(SimpleNode node) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -410,7 +539,7 @@ void createSymbolTable(SimpleNode node) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -420,7 +549,7 @@ void createSymbolTable(SimpleNode node) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 5; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -471,12 +600,12 @@ void createSymbolTable(SimpleNode node) {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[12];
+    boolean[] la1tokens = new boolean[13];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 13; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -485,7 +614,7 @@ void createSymbolTable(SimpleNode node) {
         }
       }
     }
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 13; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

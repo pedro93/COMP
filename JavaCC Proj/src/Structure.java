@@ -53,9 +53,11 @@ public class Structure implements Comparable<Structure>{
 	    Structure u=(Structure) obj;
 		return (name.equals(u.name) && type==u.type);
 	}
+	
 	@Override
 	public int compareTo(Structure o) {
-		return Integer.compare(line, o.line); // in Java 7
+		//Long.valueOf(l1).compareTo(Long.valueOf(l2));
+		return String.valueOf(name).compareTo(String.valueOf(o.name));
 	}
 
 }
