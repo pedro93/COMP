@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
+import common.Structure;
+import common.Type;
+import algorithm.CYK;
 
 /** Token Manager. */
 public class CNFParserTokenManager implements CNFParserConstants

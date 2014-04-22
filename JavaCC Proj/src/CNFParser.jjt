@@ -16,16 +16,25 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import common.Structure;
+import common.Type;
+import algorithm.CYK;
+
 public class CNFParser 
 {
 
-static TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
-static Vector<Structure> AcessableTokens = new Vector<Structure>();
-static Vector<String> toProcess = new Vector<String>();
+	TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
+	Vector<Structure> AcessableTokens = new Vector<Structure>();
+	Vector<String> toProcess = new Vector<String>();
+	String filePath;
+	File grammarFile;
 
-public static void main(String args[]) throws FileNotFoundException{
-  	try {
-			CNFParser myParser = new CNFParser(new FileInputStream(new File("grammar.txt")));
+	CNFParser(String path)
+	{
+		this.filePath = path;
+		grammarFile=new File(filePath);
+		try {
+			CNFParser myParser = new CNFParser(new FileInputStream(grammarFile));
 
 			SimpleNode root = myParser.Expression(); // devolve referência para o nó raiz da àrvore 
 
@@ -38,7 +47,7 @@ public static void main(String args[]) throws FileNotFoundException{
 			//root.dump(""); // imprime no ecra a arvore
 
 			saveGrammarToFile();
-            Algoritm alg = new Algoritm();
+            CYK alg = new CYK(path);
 			if(alg.CYKparser(toProcess))
 			{
 				System.out.println("Great Success");
@@ -56,13 +65,15 @@ public static void main(String args[]) throws FileNotFoundException{
 			e.printStackTrace();
 			System.exit(0);
 		}
- }
+	}
 
-static void saveGrammarToFile(){
+
+
+	void saveGrammarToFile(){
 		FileOutputStream fOut=null;
-        ObjectOutputStream oOut=null;
-        
-        Vector<Vector<String>> productions = new Vector<Vector<String>>();
+		ObjectOutputStream oOut=null;
+
+		Vector<Vector<String>> productions = new Vector<Vector<String>>();
 		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
 			List<Vector<Structure>> value = entry.getValue();
 			Structure key = entry.getKey();
@@ -77,30 +88,30 @@ static void saveGrammarToFile(){
 				productions.add(toAdd);
 			}
 		}
-        
-        try{
-            //Save to file A.ser
-            fOut= new FileOutputStream("A.ser");
-            oOut = new ObjectOutputStream(fOut);
-            oOut.writeObject(productions);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                oOut.flush();
-                oOut.close();
-                fOut.close();
-            }
-            catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-        
+
+		try{
+			//Save to file
+			fOut= new FileOutputStream(grammarFile.getName()+".ser");
+			oOut = new ObjectOutputStream(fOut);
+			oOut.writeObject(productions);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				oOut.flush();
+				oOut.close();
+				fOut.close();
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+
 	}
- 
-static void printSymbolTable()
+	
+	void printSymbolTable()
 	{
 		List<Vector<Structure>> value;
 		Structure key;
@@ -122,7 +133,7 @@ static void printSymbolTable()
 		}
 	}
 
-void createSymbolTable(SimpleNode node) {
+	void createSymbolTable(SimpleNode node) {
 		for(int i=0; i< node.jjtGetNumChildren(); i++) {
 			createSymbolTable((SimpleNode) node.jjtGetChild(i));
 		}
@@ -196,7 +207,7 @@ void createSymbolTable(SimpleNode node) {
 		return;
 	}
 
-void SemanticAnalysis()
+	void SemanticAnalysis()
 	{
 		boolean fail=false;
 		List<Vector<Structure>> value;
@@ -223,13 +234,13 @@ void SemanticAnalysis()
 			System.exit(-1);
 	}
 
-private boolean Analyse(Structure key) {
+	private boolean Analyse(Structure key) {
 	if(key.type!=Type.START)
 	{
-	  if(AcessableTokens.contains(key))
-		return true;
-	else
-		return false;
+		if(AcessableTokens.contains(key))
+			return true;
+		else
+			return false;
 	}
 	return true;	
 	}
