@@ -1,8 +1,8 @@
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
 import java.util.Vector;
-import java.util.Map.Entry;
 
 public class Algoritm
 {
@@ -10,25 +10,42 @@ public class Algoritm
 	static int inputSize;
 	static final int OFFSET = 1;
 
-	public Algoritm(TreeMap<Structure, List<Vector<Structure>>> SymbolTable)
+	public Algoritm()
 	{
-		productions = new Vector<Vector<String>>();
-		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
-			List<Vector<Structure>> value = entry.getValue();
-			Structure key = entry.getKey();
-			for (Vector<Structure> i : value) {
-				Vector<String> toAdd = new Vector<String>();
-				toAdd.add(key.name);
-				toAdd.add(":=");
-				for(Structure x:i)
-				{
-					toAdd.add(x.name);
-				}
-				productions.add(toAdd);
-			}
-		}
+		loadGrammarFromFile();
         System.out.println("These are the productions: " + productions.toString());
 
+	}
+
+	private void loadGrammarFromFile() {
+		FileInputStream fIn=null;
+        ObjectInputStream oIn=null;
+         
+        try{
+            //Load from file A.ser
+            fIn= new FileInputStream("A.ser");
+            oIn = new ObjectInputStream(fIn);
+ 
+            @SuppressWarnings("unchecked")
+			Vector<Vector<String>> readObject = (Vector<Vector<String>>) oIn.readObject();
+            productions = readObject;
+
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        finally{
+            try {
+                oIn.close();
+                fIn.close();
+            }
+            catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }				
 	}
 
 	public boolean CYKparser(Vector<String> stringToProcess) 

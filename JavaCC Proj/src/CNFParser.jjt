@@ -5,16 +5,16 @@ options
  
 PARSER_BEGIN(CNFParser) 
 
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.lang.String;
-
 
 public class CNFParser 
 {
@@ -37,7 +37,8 @@ public static void main(String args[]) throws FileNotFoundException{
 			printSymbolTable();
 			//root.dump(""); // imprime no ecra a arvore
 
-			Algoritm alg = new Algoritm(SymbolTable);
+			saveGrammarToFile();
+            Algoritm alg = new Algoritm();
 			if(alg.CYKparser(toProcess))
 			{
 				System.out.println("Great Success");
@@ -56,6 +57,48 @@ public static void main(String args[]) throws FileNotFoundException{
 			System.exit(0);
 		}
  }
+
+static void saveGrammarToFile(){
+		FileOutputStream fOut=null;
+        ObjectOutputStream oOut=null;
+        
+        Vector<Vector<String>> productions = new Vector<Vector<String>>();
+		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
+			List<Vector<Structure>> value = entry.getValue();
+			Structure key = entry.getKey();
+			for (Vector<Structure> i : value) {
+				Vector<String> toAdd = new Vector<String>();
+				toAdd.add(key.name);
+				toAdd.add(":=");
+				for(Structure x:i)
+				{
+					toAdd.add(x.name);
+				}
+				productions.add(toAdd);
+			}
+		}
+        
+        try{
+            //Save to file A.ser
+            fOut= new FileOutputStream("A.ser");
+            oOut = new ObjectOutputStream(fOut);
+            oOut.writeObject(productions);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                oOut.flush();
+                oOut.close();
+                fOut.close();
+            }
+            catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        
+	}
  
 static void printSymbolTable()
 	{
@@ -153,7 +196,7 @@ void createSymbolTable(SimpleNode node) {
 		return;
 	}
 
-	void SemanticAnalysis()
+void SemanticAnalysis()
 	{
 		boolean fail=false;
 		List<Vector<Structure>> value;
@@ -180,7 +223,7 @@ void createSymbolTable(SimpleNode node) {
 			System.exit(-1);
 	}
 
-	private boolean Analyse(Structure key) {
+private boolean Analyse(Structure key) {
 	if(key.type!=Type.START)
 	{
 	  if(AcessableTokens.contains(key))
