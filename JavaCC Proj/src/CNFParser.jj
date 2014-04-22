@@ -27,31 +27,37 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants/*@egen*
 
 /*@egen*/
 
-	TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
-	Vector<Structure> AcessableTokens = new Vector<Structure>();
-	Vector<String> toProcess = new Vector<String>();
-	String filePath;
-	File grammarFile;
+	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
+	private Vector<Structure> AcessableTokens = new Vector<Structure>();
+	private Vector<String> toProcess = new Vector<String>();
+	private String filePath;
+	private File grammarFile;
+	
+	public CNFParser(String path) throws FileNotFoundException
+    {
+	    this(new FileInputStream(new File(path)), null);
+	    this.filePath = path;
+	    grammarFile=new File(filePath);
+    }
 
-	CNFParser(String path)
+	public boolean run()
 	{
-		this.filePath = path;
-		grammarFile=new File(filePath);
 		try {
-			CNFParser myParser = new CNFParser(new FileInputStream(grammarFile));
-
-			SimpleNode root = myParser.Expression(); // devolve refer\u00c3\u00aancia para o n\u00c3\u00b3 raiz da \u00c3\u00a0rvore 
+			
+			SimpleNode root = Expression(); // devolve refer\u00c3\u00aancia para o n\u00c3\u00b3 raiz da \u00c3\u00a0rvore 
 
 			//Create Symbol Table
-			myParser.createSymbolTable(root);
-			myParser.SemanticAnalysis();
+			this.createSymbolTable(root);
+			this.SemanticAnalysis();
 
 			System.out.println("Symbol table size: "+SymbolTable.size());
 			printSymbolTable();
 			//root.dump(""); // imprime no ecra a arvore
 
 			saveGrammarToFile();
-            CYK alg = new CYK(path);
+			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
+			/*
+            CYK alg = new CYK(filePath);
 			if(alg.CYKparser(toProcess))
 			{
 				System.out.println("Great Success");
@@ -59,19 +65,20 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants/*@egen*
 			else
 			{
 				System.out.println("LOL NOT");
-			}
+			}*/
 
-			//ChomskyConverter chomsky = new ChomskyConverter(SymbolTable) ;
-			//chomsky.CNFconverter() ;
-
-		} catch (Exception e) {
+		}catch(ParseException i){
+			System.out.println("hello");
+			i.printStackTrace();
+		}
+		catch (Exception e) {
+			System.out.println("hi");
 			System.out.println(e.toString());
 			e.printStackTrace();
-			System.exit(0);
+			return false;
 		}
+		return true;
 	}
-
-
 
 	void saveGrammarToFile(){
 		FileOutputStream fOut=null;
