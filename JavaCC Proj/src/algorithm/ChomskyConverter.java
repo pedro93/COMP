@@ -1,12 +1,14 @@
+package algorithm;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import common.Structure;
 
 public class ChomskyConverter {
 

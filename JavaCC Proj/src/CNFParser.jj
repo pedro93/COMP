@@ -35,8 +35,15 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 	
 	public boolean isValid=false;
 	public boolean saveSucessful=false;
-	
-	
+/*
+	boolean isCNF=true;
+	//Checks if production is in CNFForm
+	if(i.size()>2)
+		isCNF=false;
+	else if(i.size()==2) 
+		if(i.get(0).type==Type.TERM || i.get(1).type==Type.TERM)
+			isCNF=false;
+	 */	
 	public CNFParser(String path) throws FileNotFoundException
 	{
 		this(new FileInputStream(new File(path)), null);
@@ -52,6 +59,9 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 
 			//Create Symbol Table
 			this.createSymbolTable(root);
+
+			
+			
 			this.SemanticAnalysis();
 			
 			if(!isValid)
@@ -62,16 +72,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 			saveGrammarToFile();
 			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
 			
-			/*
-            CYK alg = new CYK(filePath);
-			if(alg.CYKparser(toProcess))
-			{
-				System.out.println("Great Success");
-			}
-			else
-			{
-				System.out.println("LOL NOT");
-			}*/
 
 		}catch(ParseException i){
 			i.printStackTrace();
@@ -221,7 +221,8 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
 			isValid=false;
 		}
-		isValid=true;
+		else
+			isValid=true;
 		return;
 	}
 
@@ -356,7 +357,8 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
 /*@egen*/ Token lhs,rhs; }
 {/*@bgen(jjtree) StartAtribution */
         try {
-/*@egen*/	lhs=<START> <ASSIGN>
+/*@egen*/
+	lhs=<START> <ASSIGN>
 	{
 		jjtn000.Symbol.name = new String(lhs.image);
 		jjtn000.Symbol.line=lhs.beginLine;
@@ -366,13 +368,22 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
 	(
 	  	rhs=<Term>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 	|
-		rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		(
+		  rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		|
+		  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+		)
 	)+
-	(<OR>	{jjtn000.Variables.add(new Vector<Structure >());}
+	(<OR>
+	{jjtn000.Variables.add(new Vector<Structure >());}
 		(
 			rhs=<Term>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 		|
-			rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			(
+			  rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			|
+			  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+			)
 		)+
 	)*
 	<ENDPROD>/*@bgen(jjtree)*/
@@ -381,7 +392,8 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
             jjtree.closeNodeScope(jjtn000, true);
           }
         }
-/*@egen*/}
+/*@egen*/
+}
 
 void Atribution():{/*@bgen(jjtree) Atribution */
                    SimpleNode jjtn000 = new SimpleNode(JJTATRIBUTION);
@@ -401,14 +413,22 @@ void Atribution():{/*@bgen(jjtree) Atribution */
 	(
 	  	rhs=<Term>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 	|
-		rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		(
+		  rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		|
+		  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+		)
 	)+
 	(<OR>
 	{jjtn000.Variables.add(new Vector<Structure >());}
 		(
 			rhs=<Term>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 		|
-			rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			(
+			  rhs=<NonTerm>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			|
+			  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+			)
 		)+
 	)*
 	<ENDPROD>/*@bgen(jjtree)*/
@@ -419,4 +439,3 @@ void Atribution():{/*@bgen(jjtree) Atribution */
         }
 /*@egen*/
 }
-

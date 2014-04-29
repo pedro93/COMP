@@ -31,8 +31,15 @@ public class CNFParser implements Runnable
 	
 	public boolean isValid=false;
 	public boolean saveSucessful=false;
-	
-	
+/*
+	boolean isCNF=true;
+	//Checks if production is in CNFForm
+	if(i.size()>2)
+		isCNF=false;
+	else if(i.size()==2) 
+		if(i.get(0).type==Type.TERM || i.get(1).type==Type.TERM)
+			isCNF=false;
+	 */	
 	public CNFParser(String path) throws FileNotFoundException
 	{
 		this(new FileInputStream(new File(path)), null);
@@ -48,6 +55,9 @@ public class CNFParser implements Runnable
 
 			//Create Symbol Table
 			this.createSymbolTable(root);
+
+			
+			
 			this.SemanticAnalysis();
 			
 			if(!isValid)
@@ -58,16 +68,6 @@ public class CNFParser implements Runnable
 			saveGrammarToFile();
 			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
 			
-			/*
-            CYK alg = new CYK(filePath);
-			if(alg.CYKparser(toProcess))
-			{
-				System.out.println("Great Success");
-			}
-			else
-			{
-				System.out.println("LOL NOT");
-			}*/
 
 		}catch(ParseException i){
 			i.printStackTrace();
@@ -217,7 +217,8 @@ public class CNFParser implements Runnable
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
 			isValid=false;
 		}
-		isValid=true;
+		else
+			isValid=true;
 		return;
 	}
 
@@ -298,7 +299,8 @@ void stringToTest():{Token t;}
 }
 
 void StartAtribution():{ Token lhs,rhs; }
-{	lhs=<START> <ASSIGN>
+{
+	lhs=<START> <ASSIGN>
 	{
 		jjtThis.Symbol.name = new String(lhs.image);
 		jjtThis.Symbol.line=lhs.beginLine;
@@ -308,16 +310,26 @@ void StartAtribution():{ Token lhs,rhs; }
 	(
 	  	rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 	|
-		rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		(
+		  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		|
+		  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+		)
 	)+
-	(<OR>	{jjtThis.Variables.add(new Vector<Structure >());}
+	(<OR>
+	{jjtThis.Variables.add(new Vector<Structure >());}
 		(
 			rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 		|
-			rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			(
+			  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			|
+			  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+			)
 		)+
 	)*
-	<ENDPROD>}
+	<ENDPROD>
+}
 
 void Atribution():{Token lhs,rhs;}
 {
@@ -331,16 +343,23 @@ void Atribution():{Token lhs,rhs;}
 	(
 	  	rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 	|
-		rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		(
+		  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		|
+		  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+		)
 	)+
 	(<OR>
 	{jjtThis.Variables.add(new Vector<Structure >());}
 		(
 			rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
 		|
-			rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			(
+			  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			|
+			  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+			)
 		)+
 	)*
 	<ENDPROD>
 }
-
