@@ -20,7 +20,7 @@ import common.Structure;
 import common.Type;
 import algorithm.CYK;
 
-public class CNFParser 
+public class CNFParser implements Runnable
 {
 
 	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
@@ -29,29 +29,35 @@ public class CNFParser
 	private String filePath;
 	private File grammarFile;
 	
+	public boolean isValid=false;
+	public boolean saveSucessful=false;
+	
+	
 	public CNFParser(String path) throws FileNotFoundException
-    {
-	    this(new FileInputStream(new File(path)), null);
-	    this.filePath = path;
-	    grammarFile=new File(filePath);
-    }
+	{
+		this(new FileInputStream(new File(path)), null);
+		this.filePath = path;
+		grammarFile=new File(filePath);
+	}
 
-	public boolean run()
+	@Override
+	public void run()
 	{
 		try {
-			
 			SimpleNode root = Expression(); // devolve referência para o nó raiz da àrvore 
 
 			//Create Symbol Table
 			this.createSymbolTable(root);
 			this.SemanticAnalysis();
-
+			
+			if(!isValid)
+				return;
+			
 			System.out.println("Symbol table size: "+SymbolTable.size());
 			printSymbolTable();
-			//root.dump(""); // imprime no ecra a arvore
-
 			saveGrammarToFile();
 			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
+			
 			/*
             CYK alg = new CYK(filePath);
 			if(alg.CYKparser(toProcess))
@@ -64,19 +70,16 @@ public class CNFParser
 			}*/
 
 		}catch(ParseException i){
-			System.out.println("hello");
 			i.printStackTrace();
 		}
 		catch (Exception e) {
-			System.out.println("hi");
 			System.out.println(e.toString());
 			e.printStackTrace();
-			return false;
 		}
-		return true;
 	}
 
-	void saveGrammarToFile(){
+	public void saveGrammarToFile(){
+		System.out.println("Saving "+grammarFile.getName());
 		FileOutputStream fOut=null;
 		ObjectOutputStream oOut=null;
 
@@ -101,8 +104,11 @@ public class CNFParser
 			fOut= new FileOutputStream(grammarFile.getName()+".ser");
 			oOut = new ObjectOutputStream(fOut);
 			oOut.writeObject(productions);
+			System.out.println("Save sucessful");
+			saveSucessful=true;
 		}
 		catch(IOException e) {
+			System.err.println("Error: "+e.toString());
 			e.printStackTrace();
 		}
 		finally {
@@ -117,7 +123,7 @@ public class CNFParser
 		}
 
 	}
-	
+
 	void printSymbolTable()
 	{
 		List<Vector<Structure>> value;
@@ -127,7 +133,7 @@ public class CNFParser
 		{
 			value=entry.getValue();
 			key=entry.getKey();
-			System.out.print("\tKey: "+key.toString()+"\n\t\tValues:");
+			System.out.print("Key: "+key.toString()+" -> Values:");
 			for (Vector<Structure> i : value) {
 				System.out.print("[");
 				for(Structure x:i)
@@ -170,7 +176,7 @@ public class CNFParser
 			else //gramatica não permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
-				System.exit(1);
+				isValid=false;
 			}
 		}
 		else if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
@@ -191,7 +197,7 @@ public class CNFParser
 				for (Vector<Structure> temp : aux) {
 					for (Structure struct : temp) {
 						if(!AcessableTokens.contains(struct))
-							AcessableTokens.add(struct);	
+							AcessableTokens.add(struct);
 					}
 				}
 				return;
@@ -199,7 +205,7 @@ public class CNFParser
 			else //gramatica não permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
-				System.exit(1);
+				isValid=false;
 			}
 		}
 		else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
@@ -209,8 +215,9 @@ public class CNFParser
 		else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
 		{
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
-			System.exit(1);
+			isValid=false;
 		}
+		isValid=true;
 		return;
 	}
 
@@ -238,19 +245,20 @@ public class CNFParser
 			}
 		}
 		if(fail)
-			System.exit(-1);
+			isValid=false;
 	}
 
 	private boolean Analyse(Structure key) {
-	if(key.type!=Type.START)
-	{
-		if(AcessableTokens.contains(key))
-			return true;
-		else
-			return false;
+		if(key.type!=Type.START)
+		{
+			if(AcessableTokens.contains(key))
+				return true;
+			else
+				return false;
+		}
+		return true;
 	}
-	return true;	
-	}
+
 } 
  
 PARSER_END(CNFParser) 

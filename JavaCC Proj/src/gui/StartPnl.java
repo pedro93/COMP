@@ -1,11 +1,10 @@
 package gui;
 
-
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -17,8 +16,9 @@ public class StartPnl extends JPanel {
 	private Window parent;
 	private JComboBox<String> comboBox;
 	/*Create the panel.*/
-	public StartPnl(Window parent) {
-		this.parent = parent;
+	public StartPnl(Window par) {
+		super();
+		this.parent = par;
 		loadGrammars();
 		setLayout(null);
 		
@@ -42,6 +42,7 @@ public class StartPnl extends JPanel {
 		btnRun.setBounds(368, 211, 45, 23);
 		btnRun.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//parent.runFile(filePath);
 			}
 		});
 		

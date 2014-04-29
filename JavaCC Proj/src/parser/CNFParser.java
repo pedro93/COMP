@@ -15,13 +15,17 @@ import common.Structure;
 import common.Type;
 import algorithm.CYK;
 
-public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFParserConstants {/*@bgen(jjtree)*/
+public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnable, CNFParserConstants {/*@bgen(jjtree)*/
 	protected static JJTCNFParserState jjtree = new JJTCNFParserState();
 	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
 	private Vector<Structure> AcessableTokens = new Vector<Structure>();
 	private Vector<String> toProcess = new Vector<String>();
 	private String filePath;
 	private File grammarFile;
+
+	public boolean isValid=false;
+	public boolean saveSucessful=false;
+
 
 	public CNFParser(String path) throws FileNotFoundException
 	{
@@ -30,22 +34,24 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 		grammarFile=new File(filePath);
 	}
 
-	public boolean run()
+	@Override
+	public void run()
 	{
 		try {
-
 			SimpleNode root = Expression(); // devolve referência para o nó raiz da àrvore 
 
 			//Create Symbol Table
 			this.createSymbolTable(root);
 			this.SemanticAnalysis();
 
+			if(!isValid)
+				return;
+
 			System.out.println("Symbol table size: "+SymbolTable.size());
 			printSymbolTable();
-			//root.dump(""); // imprime no ecra a arvore
-
 			saveGrammarToFile();
 			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
+
 			/*
             CYK alg = new CYK(filePath);
 			if(alg.CYKparser(toProcess))
@@ -58,19 +64,16 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 			}*/
 
 		}catch(ParseException i){
-			System.out.println("hello");
 			i.printStackTrace();
 		}
 		catch (Exception e) {
-			System.out.println("hi");
 			System.out.println(e.toString());
 			e.printStackTrace();
-			return false;
 		}
-		return true;
 	}
 
-	void saveGrammarToFile(){
+	public void saveGrammarToFile(){
+		System.out.println("Saving "+grammarFile.getName());
 		FileOutputStream fOut=null;
 		ObjectOutputStream oOut=null;
 
@@ -95,8 +98,11 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 			fOut= new FileOutputStream(grammarFile.getName()+".ser");
 			oOut = new ObjectOutputStream(fOut);
 			oOut.writeObject(productions);
+			System.out.println("Save sucessful");
+			saveSucessful=true;
 		}
 		catch(IOException e) {
+			System.err.println("Error: "+e.toString());
 			e.printStackTrace();
 		}
 		finally {
@@ -121,7 +127,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 		{
 			value=entry.getValue();
 			key=entry.getKey();
-			System.out.print("\u005ctKey: "+key.toString()+"\u005cn\u005ct\u005ctValues:");
+			System.out.print("Key: "+key.toString()+" -> Values:");
 			for (Vector<Structure> i : value) {
 				System.out.print("[");
 				for(Structure x:i)
@@ -164,7 +170,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 			else //gramatica não permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
-				System.exit(1);
+				isValid=false;
 			}
 		}
 		else if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
@@ -193,7 +199,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 			else //gramatica não permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
-				System.exit(1);
+				isValid=false;
 			}
 		}
 		else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
@@ -203,8 +209,9 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 		else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
 		{
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
-			System.exit(1);
+			isValid=false;
 		}
+		isValid=true;
 		return;
 	}
 
@@ -232,7 +239,7 @@ public class CNFParser/*@bgen(jjtree)*/implements CNFParserTreeConstants, CNFPar
 			}
 		}
 		if(fail)
-			System.exit(-1);
+			isValid=false;
 	}
 
 	private boolean Analyse(Structure key) {
