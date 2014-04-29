@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -7,15 +11,19 @@ import java.util.Map.Entry;
 public class ChomskyConverter {
 
 	private static final String ERASE_ME = "ERASE_ME";
+	private static final String START0 = "START0" ;
+	private static final String START = "START" ;
+	private static final String OLDSTART = "OLDSTART" ;
 	private static final int CFN_LIMIT = 4 ;
-	private static int GEN_PRODUTION_NAME = 1 ;
-	private static int GEN_VALUE_NAME = 1 ;
+	private static int GEN_PRODUTION_NAME = 0 ;
+	private static int GEN_VALUE_NAME = 0 ;
 	
 	private static Vector<Vector<String>> productions ;
 	
-	public ChomskyConverter( TreeMap<Structure, List<Vector<Structure>>> SymbolTable )
+ 	public ChomskyConverter( TreeMap<Structure, List<Vector<Structure>>> SymbolTable )
 	{
 		productions = new Vector<Vector<String>>();
+		
 		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
 			List<Vector<Structure>> value = entry.getValue();
 			Structure key = entry.getKey();
@@ -31,7 +39,7 @@ public class ChomskyConverter {
 			}
 		}
 	}
-	
+
 	
 	public void CNFconverter() {
 		/*
@@ -42,35 +50,29 @@ public class ChomskyConverter {
 		 * 5. Processar símbolos não terminais
 		 * 6. DONE
 		 */	
-		printChomskyGrammar() ;
-		
+
 		// 1.
 		newStartProduction() ;
-		
 		// 2.
 		// gramática não aceita cadeias vazias!!!
-		
 		// 3.
-		// a gramática não aceita A->B
-		//removeUnitProductions() ;
-		
+		removeUnitProductions() ;
 		// 4.
-		// a gramática não aceita A->BCD
-		//processProductions() ;
-		
+		processProductions() ;
 		// 5.
-		// a gramática não permite a existencia de A->Ab !!
-		// processNonTerminals() ;
+		processNonTerminals() ;
 		
+		corretGrammar() ;		
+		saveProductions() ;
 		printChomskyGrammar() ;
 	}
 	
 	private static void newStartProduction() {
 		Vector<String> startproduction = new Vector<String>() ;
 		
-		startproduction.add("START0") ;
+		startproduction.add(START0) ;
 		startproduction.add(":=") ;
-		startproduction.add("START") ;
+		startproduction.add(START) ;
 		
 		Vector<Vector<String>> updatedproductions = new Vector<Vector<String>>() ;
 		
@@ -83,6 +85,8 @@ public class ChomskyConverter {
 	
 	private static void removeUnitProductions() 
 	{	
+		Vector<Vector<String>> temp_prod = new Vector<Vector<String>>() ;
+		
 		for( Vector<String> prod : productions ) // para todos os elementos
 		{
 			if( prod.size() == 3 ) // procurar aqueles com produções unitárias
@@ -92,6 +96,8 @@ public class ChomskyConverter {
 				// só interessam produções do tipo A->B e não A->b !!
 				if( ! (searchProd.getBytes()[0] >= 'a' && searchProd.getBytes()[0] <= 'z') )
 				{
+					
+					
 					for( Vector<String> sprod : productions ) // procurar em todos
 						if( sprod.elementAt(0).equals(searchProd)) // a produção anotada
 						{
@@ -101,7 +107,7 @@ public class ChomskyConverter {
 							for( int i=2 ; i<sprod.size() ; i++ )
 								newprod.add( sprod.elementAt(i) ) ;
 							
-							productions.add(newprod) ;
+							temp_prod.add(newprod) ;
 						}
 					
 					prod.clear() ; prod.add(ERASE_ME) ;
@@ -109,40 +115,90 @@ public class ChomskyConverter {
 			}
 		}
 		
+		for( Vector<String> v : temp_prod )
+			productions.add(v) ;
+		
 		cleanUpProdutions() ;
 	}
 	
 	private static void processProductions() 
 	{
+		Vector<Vector<String>> temp_prod = new Vector<Vector<String>>() ;
+		
 		for( Vector<String> prod : productions )
 		{
 			if( prod.size() > CFN_LIMIT )
 			{
 				Vector<String> v1 = new Vector<String>() ;
-				String chomskyp = genProdName() ;
+				
+				String chomskyp = new String() ;		
+				
+				boolean found = false ;
+				
+				for( Vector<String> v : temp_prod )
+				{
+					found = false ;
+					
+					if( v.size() == prod.size()-1 )
+					{
+						for( int i=2 ; i<v.size() ; i++)
+						{
+							System.out.println( v.elementAt(i) + " == " + prod.elementAt(i+1) );
+							if( v.elementAt(i).equals( prod.elementAt(i+1) ) )
+							{
+								
+								found = true ;
+							}
+							else
+							{
+								found = false ;
+								break ;
+							}
+						}
+					}
+					
+					if ( found )
+					{
+						chomskyp = v.elementAt(0) ;
+						break ;
+					}
+				} 
+					
+				if( ! found )
+					chomskyp = genProdName() ;
+				
 				v1.add( prod.elementAt(0) ) ;
 				v1.add( prod.elementAt(1) ) ;
 				v1.add( prod.elementAt(2) ) ;
 				v1.add( chomskyp ) ;
 				
-				Vector<String> v2 = new Vector<String>() ;
-				v2.add( chomskyp ) ;
-				v2.add( ":=") ;
-				for( int i=3 ; i<prod.size() ; i++ )
-					v2.add( prod.elementAt(i) ) ;
+				if ( ! found )
+				{
+					Vector<String> v2 = new Vector<String>() ;
+					v2.add( chomskyp ) ;
+					v2.add( ":=") ;
+					for( int i=3 ; i<prod.size() ; i++ )
+						v2.add( prod.elementAt(i) ) ;
+					
+					temp_prod.add(v2) ;
+				}
 				
-				productions.add(v1) ;
-				productions.add(v2) ;
+				temp_prod.add(v1) ;
 				
 				prod.clear() ; prod.add(ERASE_ME) ;
 			}
 		}
+		
+		for( Vector<String> v : temp_prod )
+			productions.add(v) ;
 		
 		cleanUpProdutions() ;
 	}
 	
 	private static void processNonTerminals()
 	{
+		Vector<Vector<String>> temp_prod = new Vector<Vector<String>>() ;
+		
 		for( Vector<String> prod : productions ) // para todos os elementos
 		{
 			// é suposto neste momento todas as produções
@@ -154,27 +210,55 @@ public class ChomskyConverter {
 				byte b1 = prod.elementAt(2).getBytes()[0] ;
 				byte b2 = prod.elementAt(3).getBytes()[0] ;
 				
-				String s1 , s2 ;
+				String s1 = new String() ;
+				String s2 = new String() ;
+				
 				if( b1>='a' && b1<='z' ) // primeiro elemento
 				{
-					s1 = genValName() ;
+					boolean found = false ;
+					
+					for( Vector<String> v : temp_prod )
+						if( v.elementAt(2).equals(prod.elementAt(2)) )
+						{
+							s1 = v.elementAt(0) ;
+							found = true ;
+						}
+					
+					if( ! found )
+						s1 = genValName() ;
+					
 					Vector<String> genVal1 = new Vector<String>() ;
 					genVal1.add( s1 ) ;
 					genVal1.add(":=") ;
 					genVal1.add( prod.elementAt(2) ) ;
-					productions.add( genVal1 ) ;
+					
+					if( ! found )
+						temp_prod.add( genVal1 ) ;
 				}
 				else
 					s1 = prod.elementAt(2) ;
 				
 				if( b2>='a' && b2<='z' ) // segundo elemento
 				{
-					s2 = genValName() ;
+					boolean found = false ;
+					
+					for( Vector<String> v : temp_prod )
+						if( v.elementAt(2).equals(prod.elementAt(3)) )
+						{
+							s2 = v.elementAt(0) ;
+							found = true ;
+						}
+
+					if( ! found )
+						s2 = genValName() ;
+					
 					Vector<String> genVal2 = new Vector<String>() ;
 					genVal2.add( s2 ) ;
 					genVal2.add(":=") ;
 					genVal2.add( prod.elementAt(3) ) ;
-					productions.add( genVal2 ) ;
+					
+					if( ! found )
+						temp_prod.add( genVal2 ) ;
 				}
 				else
 					s2 = prod.elementAt(3) ;
@@ -184,16 +268,131 @@ public class ChomskyConverter {
 				v.add( prod.elementAt(1) ) ;
 				v.add( s1 ) ;
 				v.add( s2 ) ;
-				productions.add( v ) ;
+				temp_prod.add( v ) ;
 				
 				prod.clear() ; prod.add(ERASE_ME) ;
 			}
 		}
 		
+		for( Vector<String> v : temp_prod )
+			productions.add(v) ;
+		
 		cleanUpProdutions() ;
 	}
+
+	/**
+	 * grava a gramatica num ficheiro de texto de nome 'output.txt'
+	 */
+	private static void creatNewFile() {
+		
+		try
+		{	
+			File f = new File( "output.txt" ) ;
+			if ( f.exists() )
+				f.delete() ;
+			
+			f.createNewFile() ;
+			
+		    FileWriter fw = new FileWriter("output.txt",true) ;
+		    
+		    for( Vector<String> v : productions )
+		    {
+		    	for( String s : v )
+		    	{
+		    		fw.write( s + " " ) ; 
+		    	}
+		    	fw.write(";\n") ;
+		    }
+		    
+		    fw.write("END") ;
+		    
+		    fw.close();
+		}
+		catch(IOException ioe)	{ ioe.printStackTrace(); }
+	}
+	/**
+	 * organiza as produções do vetor 'productions'
+	 */
+	private static void organizeFile() {
+		
+		Vector<Vector<String>> aux = new Vector<Vector<String>>() ;
+		
+		// primeiros 'START'
+		for( Vector<String> v : productions )
+			if( v.elementAt(0).equals(ChomskyConverter.START) )
+				aux.add(v) ;
+		// depois os antigos 'START'
+		
+		for( Vector<String> v : productions )
+			if( v.elementAt(0).equals(ChomskyConverter.OLDSTART) )
+				aux.add(v) ;
+		// as restantes produções
+		
+		for( Vector<String> v : productions )
+			if( v.size() == 4 && !v.elementAt(0).equals(ChomskyConverter.OLDSTART) 
+			&& !v.elementAt(0).equals(ChomskyConverter.START))
+				aux.add(v) ;
+		
+		// e finalmente os terminais
+		for( Vector<String> v : productions )
+			if( v.size() < 4 && !v.elementAt(0).equals(ChomskyConverter.OLDSTART) 
+					&& !v.elementAt(0).equals(ChomskyConverter.START) )
+				aux.add(v) ;
+		
+		productions = aux ;
+	}
 	
+	/**
+	 * organiza e grava as produções da gramática num ficheiro de texto 'output.txt'
+	 */
+	private static void saveProductions() {
+		organizeFile() ;
+		creatNewFile() ;
+	}
 	
+	/**
+	 * corrige o nome da produção inicial 'START' para ser aceite pela gramática do parser
+	 */
+	private static void corretGrammar() {
+		
+		Vector<Vector<String>> aux1 = new Vector<Vector<String>>() ;
+		
+		for( Vector<String> v : productions )
+		{
+			Vector<String> aux_v = new Vector<String>() ;
+			
+			for( String s : v )
+			{				
+				if( s.equals(START) )
+					aux_v.add(OLDSTART) ;
+				else
+					aux_v.add( s ) ;
+			}
+			
+			aux1.add( aux_v ) ;
+		}
+		
+		productions = aux1 ;
+		
+		Vector<Vector<String>> aux2 = new Vector<Vector<String>>() ;
+
+		for( Vector<String> v : aux1 )
+		{
+			if ( v.elementAt(0).equals(START0) )
+			{
+				Vector<String> aux_v = new Vector<String>() ;
+				aux_v.add(START) ;
+				for( int i=1 ; i<v.size() ; i++ )
+					aux_v.add( v.elementAt(i) ) ;
+				
+				aux2.add( aux_v ) ;
+			}
+			else
+				aux2.add(v) ;
+		}
+		
+		productions = aux2 ;
+	}
 	
 	/**
 	 *  generate a sring for a new terminal symbol
@@ -201,7 +400,9 @@ public class ChomskyConverter {
 	 */
 	private static String genValName()
 	{
-		String s = new String("ChomskyVal") ;
+		String s = new String("ValC") ;
+		GEN_VALUE_NAME+=1;
+		
 		return s+GEN_VALUE_NAME ;
 	}
 	
@@ -211,7 +412,9 @@ public class ChomskyConverter {
 	 */
 	private static String genProdName()
 	{
-		String s = new String("ChomskyProd") ;
+		String s = new String("ProdC") ;
+		GEN_PRODUTION_NAME+=1;
+		
 		return s+GEN_PRODUTION_NAME ;
 	}
 	
