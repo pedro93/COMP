@@ -45,6 +45,9 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 	else if(i.size()==2) 
 		if(i.get(0).type==Type.TERM || i.get(1).type==Type.TERM)
 			isCNF=false;
+	else if(i.size()==1)
+		if(i.get(0).type!=Type.TERM)
+			isCNF=false;
 	 */	
 	public CNFParser(String path) throws FileNotFoundException
 	{

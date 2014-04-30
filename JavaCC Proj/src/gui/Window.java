@@ -140,6 +140,7 @@ public class Window extends JFrame {
 
 	public void showPanel(int i) {
 		setContentPane(panels.get(i));
+		revalidate();
 	}
 
 	private void createPanels() {

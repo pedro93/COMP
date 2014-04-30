@@ -51,6 +51,11 @@ public class ParsePnl extends JPanel {
 		add(panel, BorderLayout.SOUTH);
 
 		JButton btnCanel = new JButton("Cancel");
+		btnCanel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				parent.showPanel(0);
+			}
+		});
 		panel.add(btnCanel);
 
 		btnRunAlgorithm = new JButton("Run Algorithm");
@@ -68,7 +73,7 @@ public class ParsePnl extends JPanel {
 		Console.redirectOutput( textArea );
 		CNFParser parser=null;
 		try {
-			parser = new CNFParser("grammar.txt");
+			parser = new CNFParser(parent.filePath);
 			parser.run();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
