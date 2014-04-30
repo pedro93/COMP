@@ -1,0 +1,367 @@
+options 
+{ 
+ LOOKAHEAD=1; 
+} 
+ 
+PARSER_BEGIN(CNFParser) 
+
+package parser;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.Vector;
+
+import common.Structure;
+import common.Type;
+import algorithm.CYK;
+
+public class CNFParser implements Runnable
+{
+
+	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
+	private Vector<Structure> AcessableTokens = new Vector<Structure>();
+	private Vector<String> toProcess = new Vector<String>();
+	private String filePath;
+	private File grammarFile;
+	
+	public boolean isValid=false;
+	public boolean saveSucessful=false;
+/*
+	boolean isCNF=true;
+	//Checks if production is in CNFForm
+	if(i.size()>2)
+		isCNF=false;
+	else if(i.size()==2) 
+		if(i.get(0).type==Type.TERM || i.get(1).type==Type.TERM)
+			isCNF=false;
+	 */	
+	public CNFParser(String path) throws FileNotFoundException
+	{
+		this(new FileInputStream(new File(path)), null);
+		this.filePath = path;
+		grammarFile=new File(filePath);
+	}
+
+	@Override
+	public void run()
+	{
+		try {
+			SimpleNode root = Expression(); // devolve referência para o nó raiz da àrvore 
+
+			//Create Symbol Table
+			this.createSymbolTable(root);
+
+			
+			
+			this.SemanticAnalysis();
+			
+			if(!isValid)
+				return;
+			
+			System.out.println("Symbol table size: "+SymbolTable.size());
+			printSymbolTable();
+			saveGrammarToFile();
+			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
+			
+
+		}catch(ParseException i){
+			i.printStackTrace();
+		}
+		catch (Exception e) {
+			System.out.println(e.toString());
+			e.printStackTrace();
+		}
+	}
+
+	public void saveGrammarToFile(){
+		System.out.println("Saving "+grammarFile.getName());
+		FileOutputStream fOut=null;
+		ObjectOutputStream oOut=null;
+
+		Vector<Vector<String>> productions = new Vector<Vector<String>>();
+		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
+			List<Vector<Structure>> value = entry.getValue();
+			Structure key = entry.getKey();
+			for (Vector<Structure> i : value) {
+				Vector<String> toAdd = new Vector<String>();
+				toAdd.add(key.name);
+				toAdd.add(":=");
+				for(Structure x:i)
+				{
+					toAdd.add(x.name);
+				}
+				productions.add(toAdd);
+			}
+		}
+
+		try{
+			//Save to file
+			fOut= new FileOutputStream(grammarFile.getName()+".ser");
+			oOut = new ObjectOutputStream(fOut);
+			oOut.writeObject(productions);
+			System.out.println("Save sucessful");
+			saveSucessful=true;
+		}
+		catch(IOException e) {
+			System.err.println("Error: "+e.toString());
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				oOut.flush();
+				oOut.close();
+				fOut.close();
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+	}
+
+	void printSymbolTable()
+	{
+		List<Vector<Structure>> value;
+		Structure key;
+		System.out.println("TreeHash");
+		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet())
+		{
+			value=entry.getValue();
+			key=entry.getKey();
+			System.out.print("Key: "+key.toString()+" -> Values:");
+			for (Vector<Structure> i : value) {
+				System.out.print("[");
+				for(Structure x:i)
+				{
+					System.out.print(x.toString()+",");
+				}
+				System.out.print("]");
+			}
+			System.out.println();
+		}
+	}
+
+	void createSymbolTable(SimpleNode node) {
+		for(int i=0; i< node.jjtGetNumChildren(); i++) {
+			createSymbolTable((SimpleNode) node.jjtGetChild(i));
+		}
+		if(node.id == CNFParserTreeConstants.JJTSTARTATRIBUTION) {
+			if(node.Variables.size()!=0)
+			{
+				List<Vector<Structure>> aux;
+				if(SymbolTable.get(node.Symbol)==null)
+				{
+					SymbolTable.put(node.Symbol, node.Variables);
+				}
+				else
+				{
+					aux = SymbolTable.get(node.Symbol);
+					for(Vector<Structure> temp: node.Variables)
+						aux.add(temp);
+				}
+				aux = node.Variables;
+				for (Vector<Structure> temp : aux) {
+					for (Structure struct : temp) {
+						if(!AcessableTokens.contains(struct))
+							AcessableTokens.add(struct);
+					}
+				}
+				return;
+			}
+			else //gramatica não permite chegar a este ponto
+			{
+				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
+				isValid=false;
+			}
+		}
+		else if(node.id == CNFParserTreeConstants.JJTATRIBUTION) {
+			if(node.Variables.size()!=0)
+			{
+				List<Vector<Structure>> aux;
+				if(SymbolTable.get(node.Symbol)==null)
+				{
+					SymbolTable.put(node.Symbol, node.Variables);
+				}
+				else
+				{
+					aux = SymbolTable.get(node.Symbol);
+					for(Vector<Structure> temp: node.Variables)
+						aux.add(temp);
+				}
+				aux = node.Variables;
+				for (Vector<Structure> temp : aux) {
+					for (Structure struct : temp) {
+						if(!AcessableTokens.contains(struct))
+							AcessableTokens.add(struct);
+					}
+				}
+				return;
+			}
+			else //gramatica não permite chegar a este ponto
+			{
+				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
+				isValid=false;
+			}
+		}
+		else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
+		{
+			toProcess.add(node.Symbol.name);
+		}
+		else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
+		{
+			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
+			isValid=false;
+		}
+		else
+			isValid=true;
+		return;
+	}
+
+	void SemanticAnalysis()
+	{
+		boolean fail=false;
+		List<Vector<Structure>> value;
+		Structure key;
+		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
+			value= entry.getValue();
+			key=entry.getKey();
+			if(!Analyse(key))
+				System.err.println("[Warning] "+key.type+" "+key.name+" cannot be derived from START attribution, line "+key.line+", column:"+key.column);
+			for (Vector<Structure> i : value) {
+				for(Structure x:i)
+				{
+					if(x.type!=Type.NONTERM)
+						continue;
+					else if(!SymbolTable.containsKey(x))
+					{
+						System.err.println("[Error] Found "+x.type+": " +x.name+" without production in line "+x.line+", coloumn "+x.column);
+						fail=true;
+					}
+				}
+			}
+		}
+		if(fail)
+			isValid=false;
+	}
+
+	private boolean Analyse(Structure key) {
+		if(key.type!=Type.START)
+		{
+			if(AcessableTokens.contains(key))
+				return true;
+			else
+				return false;
+		}
+		return true;
+	}
+
+} 
+ 
+PARSER_END(CNFParser) 
+ 
+SKIP :
+{
+	" " | "\n" | "\r" | "\t"
+} 
+ 
+TOKEN: 
+{
+ //Permite-se tamanhos maior que 1? P.ex: AC (pode-se confundir com nonTerm?)
+ < START: "START" >|
+ < END: "END" >|
+ < ASSIGN: ":=">|
+ < ENDPROD: ";">|
+ < OR: "|">|
+ < STRING: "STRING:">|
+ < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
+ < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
+}
+ 
+SimpleNode Expression(): {Token t;} 
+{
+	(StartAtribution())+ (Atribution())* < STRING > (stringToTest())+< END >{return jjtThis;} // código Java entre chavetas 
+}
+
+void stringToTest():{Token t;}
+{
+ t=< Term >
+ {
+ 	jjtThis.Symbol.name = new String(t.image);
+	jjtThis.Symbol.line=t.beginLine;
+	jjtThis.Symbol.column=t.beginColumn;
+	jjtThis.Symbol.type=Type.STRING;
+  }
+}
+
+void StartAtribution():{ Token lhs,rhs; }
+{
+	lhs=<START> <ASSIGN>
+	{
+		jjtThis.Symbol.name = new String(lhs.image);
+		jjtThis.Symbol.line=lhs.beginLine;
+		jjtThis.Symbol.column=lhs.beginColumn;
+		jjtThis.Symbol.type=Type.START;
+	}
+	(
+	  	rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
+	|
+		(
+		  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		|
+		  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+		)
+	)+
+	(<OR>
+	{jjtThis.Variables.add(new Vector<Structure >());}
+		(
+			rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
+		|
+			(
+			  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			|
+			  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+			)
+		)+
+	)*
+	<ENDPROD>
+}
+
+void Atribution():{Token lhs,rhs;}
+{
+  	lhs=<NonTerm> <ASSIGN>
+	{
+		jjtThis.Symbol.name = new String(lhs.image);
+		jjtThis.Symbol.line=lhs.beginLine;
+		jjtThis.Symbol.column=lhs.beginColumn;
+		jjtThis.Symbol.type=Type.NONTERM;
+	}
+	(
+	  	rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
+	|
+		(
+		  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+		|
+		  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+		)
+	)+
+	(<OR>
+	{jjtThis.Variables.add(new Vector<Structure >());}
+		(
+			rhs=<Term>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.TERM,rhs.beginLine,rhs.beginColumn));}
+		|
+			(
+			  rhs=<NonTerm>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.NONTERM,rhs.beginLine,rhs.beginColumn));}
+			|
+			  rhs=<START>{jjtThis.Variables.get(jjtThis.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
+			)
+		)+
+	)*
+	<ENDPROD>
+}
