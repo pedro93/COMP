@@ -7,16 +7,15 @@
 	</target>
 
 	<target name="run" depends="compile">
-		<java fork="true" failonerror="yes" classname="CNFParser">
+		<java fork="true" failonerror="yes" classname="Window">
 			<classpath path="bin" />
 		</java>
 	</target>
 
 	<target name="compile">
-		<jjtree target="src/CNFParser.jjt" outputdirectory="src"
+		<jjtree target="src/CNFParser.jjt" outputdirectory="src/parser"
 			javacchome="C:\javacc-5.0" nodeusesparser="true" />
-		<javacc target="src/CNFParser.jjt" outputdirectory="src"
+		<javacc target="src/CNFParser.jjt" outputdirectory="src/parser"
 			javacchome="C:\javacc-5.0" static="true" />
-		<javac includeantruntime="false" srcdir="./src" destdir="bin" />
 	</target>
 </project>
