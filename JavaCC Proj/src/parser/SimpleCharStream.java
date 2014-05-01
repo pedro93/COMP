@@ -85,7 +85,7 @@ public class SimpleCharStream
     tokenBegin = 0;
   }
 
-  protected void FillBuff() throws java.io.IOException
+  static protected void FillBuff() throws java.io.IOException
   {
     if (maxNextCharInd == available)
     {
@@ -130,7 +130,7 @@ public class SimpleCharStream
   }
 
 /** Start. */
-  public char BeginToken() throws java.io.IOException
+  static public char BeginToken() throws java.io.IOException
   {
     tokenBegin = -1;
     char c = readChar();
@@ -180,7 +180,7 @@ public class SimpleCharStream
   }
 
 /** Read a character. */
-  public char readChar() throws java.io.IOException
+  static public char readChar() throws java.io.IOException
   {
     if (inBuf > 0)
     {
@@ -222,27 +222,27 @@ public class SimpleCharStream
   }
 
   /** Get token end column number. */
-  public int getEndColumn() {
+  static public int getEndColumn() {
     return bufcolumn[bufpos];
   }
 
   /** Get token end line number. */
-  public int getEndLine() {
+  static public int getEndLine() {
      return bufline[bufpos];
   }
 
   /** Get token beginning column number. */
-  public int getBeginColumn() {
+  static public int getBeginColumn() {
     return bufcolumn[tokenBegin];
   }
 
   /** Get token beginning line number. */
-  public int getBeginLine() {
+  static public int getBeginLine() {
     return bufline[tokenBegin];
   }
 
 /** Backup a number of characters. */
-  public void backup(int amount) {
+  static public void backup(int amount) {
 
     inBuf += amount;
     if ((bufpos -= amount) < 0)
@@ -390,7 +390,7 @@ public class SimpleCharStream
     ReInit(dstream, startline, startcolumn, 4096);
   }
   /** Get token literal value. */
-  public String GetImage()
+  static public String GetImage()
   {
     if (bufpos >= tokenBegin)
       return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);

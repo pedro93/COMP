@@ -13,6 +13,7 @@ import java.util.Vector;
 import common.Structure;
 import common.Type;
 import algorithm.CYK;
+import algorithm.ChomskyConverter;
 
 /** Token Manager. */
 public class CNFParserTokenManager implements CNFParserConstants

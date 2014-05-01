@@ -15,6 +15,7 @@ import java.util.Vector;
 import common.Structure;
 import common.Type;
 import algorithm.CYK;
+import algorithm.ChomskyConverter;
 
 public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnable, CNFParserConstants {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
@@ -26,18 +27,8 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
 
         public boolean isValid=false;
         public boolean saveSucessful=false;
-/*
-	boolean isCNF=true;
-	//Checks if production is in CNFForm
-	if(i.size()>2)
-		isCNF=false;
-	else if(i.size()==2) 
-		if(i.get(0).type==Type.TERM || i.get(1).type==Type.TERM)
-			isCNF=false;
-	else if(i.size()==1)
-		if(i.get(0).type!=Type.TERM)
-			isCNF=false;
-	 */
+
+
         public CNFParser(String path) throws FileNotFoundException
         {
                 this(new FileInputStream(new File(path)), null);
@@ -49,12 +40,10 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
         public void run()
         {
                 try {
-                        SimpleNode root = Expression(); // devolve referência para o nó raiz da àrvore 
+                        SimpleNode root = Expression(); // devolve refer??ncia para o n?? raiz da ??rvore 
 
                         //Create Symbol Table
                         this.createSymbolTable(root);
-
-
 
                         this.SemanticAnalysis();
 
@@ -63,7 +52,13 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
 
                         System.out.println("Symbol table size: "+SymbolTable.size());
                         printSymbolTable();
-                        saveGrammarToFile();
+
+                        ChomskyConverter cnf = new ChomskyConverter(SymbolTable) ;
+                        Vector < Vector <String >> productions = new Vector < Vector<String >>() ;
+                        productions = cnf.CNFconverter() ;
+
+                        saveGrammarToFile( productions );
+
                         System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
 
 
@@ -76,26 +71,10 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                 }
         }
 
-        public void saveGrammarToFile(){
+        public void saveGrammarToFile( Vector<Vector<String >>productions ){
                 System.out.println("Saving "+grammarFile.getName());
                 FileOutputStream fOut=null;
                 ObjectOutputStream oOut=null;
-
-                Vector<Vector<String>> productions = new Vector<Vector<String>>();
-                for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
-                        List<Vector<Structure>> value = entry.getValue();
-                        Structure key = entry.getKey();
-                        for (Vector<Structure> i : value) {
-                                Vector<String> toAdd = new Vector<String>();
-                                toAdd.add(key.name);
-                                toAdd.add(":=");
-                                for(Structure x:i)
-                                {
-                                        toAdd.add(x.name);
-                                }
-                                productions.add(toAdd);
-                        }
-                }
 
                 try{
                         //Save to file
@@ -171,7 +150,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 }
                                 return;
                         }
-                        else //gramatica não permite chegar a este ponto
+                        else //gramatica n??o permite chegar a este ponto
                         {
                                 System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                                 isValid=false;
@@ -200,7 +179,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 }
                                 return;
                         }
-                        else //gramatica não permite chegar a este ponto
+                        else //gramatica n??o permite chegar a este ponto
                         {
                                 System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                                 isValid=false;

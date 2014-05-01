@@ -82,7 +82,7 @@ public class ParsePnl extends JPanel {
 		if(parser!=null)
 			if(parser.isValid)
 			{
-				parser.saveGrammarToFile();
+				//parser.saveGrammarToFile();
 				btnRunAlgorithm.setEnabled(true); 
 				return; //enabled next button
 			}

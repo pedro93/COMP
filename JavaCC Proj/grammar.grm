@@ -1,8 +1,7 @@
-START:=NP VP|X coisa;
-START:=coisa;
+START:=NP VP;
 VP:=VP PP;
 VP:=V NP;
-VP:=eats VP;
+VP:=VP V;
 PP:=P NP;
 NP:=Det N;
 NP:=she;
@@ -11,7 +10,6 @@ P:=with;
 N:=fish;
 N:=fork;
 Det:=a;
-X:=s;
 STRING:
 she eats a fish with a fork
 END

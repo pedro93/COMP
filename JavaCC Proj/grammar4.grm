@@ -1,0 +1,8 @@
+START:=A B c|A C;
+A:=a;
+B:=C START;
+C:=b D;
+D:=B;
+STRING:
+a b
+END
