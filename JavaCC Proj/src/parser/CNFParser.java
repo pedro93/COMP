@@ -40,7 +40,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
         public void run()
         {
                 try {
-                        SimpleNode root = Expression(); // devolve refer??ncia para o n?? raiz da ??rvore 
+                        SimpleNode root = Expression(); // devolve referência para o nó raiz da àrvore 
 
                         //Create Symbol Table
                         this.createSymbolTable(root);
@@ -72,13 +72,16 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
         }
 
         public void saveGrammarToFile( Vector<Vector<String >>productions ){
-                System.out.println("Saving "+grammarFile.getName());
+                String fileName = grammarFile.getName().substring(0, grammarFile.getName().lastIndexOf("."));
+
+                System.out.println("Saving "+fileName);
                 FileOutputStream fOut=null;
                 ObjectOutputStream oOut=null;
 
                 try{
                         //Save to file
-                        fOut= new FileOutputStream(grammarFile.getName()+".ser");
+
+                        fOut= new FileOutputStream(fileName+".ser");
                         oOut = new ObjectOutputStream(fOut);
                         oOut.writeObject(productions);
                         System.out.println("Save sucessful");
@@ -150,7 +153,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 }
                                 return;
                         }
-                        else //gramatica n??o permite chegar a este ponto
+                        else //gramatica não permite chegar a este ponto
                         {
                                 System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                                 isValid=false;
@@ -179,7 +182,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 }
                                 return;
                         }
-                        else //gramatica n??o permite chegar a este ponto
+                        else //gramatica não permite chegar a este ponto
                         {
                                 System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                                 isValid=false;

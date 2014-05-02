@@ -51,7 +51,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 	public void run()
 	{
 		try {
-			SimpleNode root = Expression(); // devolve refer\ufffd\ufffdncia para o n\ufffd\ufffd raiz da \ufffd\ufffdrvore 
+			SimpleNode root = Expression(); // devolve refer\u00c3\u00aancia para o n\u00c3\u00b3 raiz da \u00c3\u00a0rvore 
 
 			//Create Symbol Table
 			this.createSymbolTable(root);
@@ -81,13 +81,16 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 	}
 
 	public void saveGrammarToFile( Vector<Vector<String >>productions ){
-		System.out.println("Saving "+grammarFile.getName());
+		String fileName = grammarFile.getName().substring(0, grammarFile.getName().lastIndexOf("."));
+
+		System.out.println("Saving "+fileName);
 		FileOutputStream fOut=null;
 		ObjectOutputStream oOut=null;
 
 		try{
 			//Save to file
-			fOut= new FileOutputStream(grammarFile.getName()+".ser");
+
+			fOut= new FileOutputStream(fileName+".ser");
 			oOut = new ObjectOutputStream(fOut);
 			oOut.writeObject(productions);
 			System.out.println("Save sucessful");
@@ -159,7 +162,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 				}
 				return;
 			}
-			else //gramatica n\ufffd\ufffdo permite chegar a este ponto
+			else //gramatica n\u00c3\u00a3o permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 				isValid=false;
@@ -188,7 +191,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 				}
 				return;
 			}
-			else //gramatica n\ufffd\ufffdo permite chegar a este ponto
+			else //gramatica n\u00c3\u00a3o permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 				isValid=false;
@@ -301,7 +304,7 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
             jjtree.closeNodeScope(jjtn000, true);
           }
         }
-/*@egen*/ // c\ufffd\ufffddigo Java entre chavetas 
+/*@egen*/ // c\u00c3\u00b3digo Java entre chavetas 
 }
 
 void stringToTest():{/*@bgen(jjtree) stringToTest */

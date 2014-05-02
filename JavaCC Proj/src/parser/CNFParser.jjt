@@ -77,13 +77,16 @@ public class CNFParser implements Runnable
 	}
 
 	public void saveGrammarToFile( Vector<Vector<String >>productions ){
-		System.out.println("Saving "+grammarFile.getName());
+		String fileName = grammarFile.getName().substring(0, grammarFile.getName().lastIndexOf("."));
+
+		System.out.println("Saving "+fileName);
 		FileOutputStream fOut=null;
 		ObjectOutputStream oOut=null;
 
 		try{
 			//Save to file
-			fOut= new FileOutputStream(grammarFile.getName()+".ser");
+
+			fOut= new FileOutputStream(fileName+".ser");
 			oOut = new ObjectOutputStream(fOut);
 			oOut.writeObject(productions);
 			System.out.println("Save sucessful");
