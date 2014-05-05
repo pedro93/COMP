@@ -1,3 +1,6 @@
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,7 +18,9 @@ public class CYK {
     static int inputSize;
     static final int OFFSET = 1;
 
-    public static void loadGrammar(String filename) throws IOException
+    static final boolean LOG = false;
+
+    public  void loadGrammar(String filename) throws IOException
     {
         productions = new Vector<Vector<String>>();
 
@@ -38,17 +43,19 @@ public class CYK {
 
         }
 
-        System.out.println("These are the productions: " + productions.toString());
+        if(LOG)
+            System.out.println("These are the productions: " + productions.toString());
     }
 
-    private static Vector<String> splitString(String line) {
+    private Vector<String> splitString(String line) {
         Vector<String> toAdd = new Vector<String>();
 
         String split_line[] = line.split("\\s+");
 
         for(int i = 0; i < split_line.length; i++)
         {
-            System.out.print(i + ": " + split_line[i] + "  ");
+            if(LOG)
+                System.out.print(i + ": " + split_line[i] + "  ");
 
             toAdd.add(split_line[i]);
 
@@ -56,10 +63,44 @@ public class CYK {
         return toAdd;
     }
 
-    public static boolean CYKparser(Vector<String> toProcess) {
+    public boolean CYKparser(Vector<String> toProcess, String input) {
 
-        //Tamanho do vector = summatory.
-        //String[][] table = new String[(inputSize)][];
+        //Window Functions
+
+        JFrame frame = new JFrame("Cyk Parser");
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.setSize(800,600);
+
+        //Cell Panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(toProcess.size(), toProcess.size(), 4, 4));
+
+        //BottomPanel
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+        bottomPanel.setPreferredSize(new Dimension(frame.getHeight(), 40));
+        bottomPanel.setLayout(new BorderLayout());
+        JLabel inputStringLabel = new JLabel("  Input String: " + input);
+
+        //BtnPanel
+        JPanel btnPanel = new JPanel();
+        btnPanel.setOpaque(false);
+        JButton runBtn = new JButton("Run");
+        inputStringLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        btnPanel.add(runBtn);
+
+        bottomPanel.add(inputStringLabel);
+        bottomPanel.add(btnPanel, BorderLayout.EAST);
+
+        frame.add(panel);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        Vector<JPanel> panels = new Vector<JPanel>();
+        initCellPanels(toProcess, panels, panel);
+
+        //Algorithm
 
         Vector<ArrayList<Vector<String>>> table = new Vector<ArrayList<Vector<String>>>();
 
@@ -74,7 +115,8 @@ public class CYK {
             table.add(tableRow);
         }
 
-        printTable(table);
+        if(LOG)
+            printTable(table);
 
         for(int level = inputSize-1; level >= 0; level--)
         {
@@ -84,30 +126,61 @@ public class CYK {
                 possibleInputs = new Vector<String>();
 
                 int combinations =  (inputSize-OFFSET)-level;
-                System.out.println("LEVEL: " + level + " TABLEPOS: " + tablePosition  + " COMBINATIONS: " + combinations);
+
+                if(LOG)
+                    System.out.println("LEVEL: " + level + " TABLEPOS: " + tablePosition  + " COMBINATIONS: " + combinations);
 
                 if(level == inputSize-1)
                 {
+                    fillPanel(0, panels, table, level, tablePosition, panel);
+
                     table.elementAt(inputSize-OFFSET).set(tablePosition, get1stKeys(toProcess, tablePosition));
+
+                    catchSomeZs();
+
+                    fillPanel(2, panels, table, level, tablePosition, panel);
+
+                    catchSomeZs();
                 }
                 else {
+                    fillPanel(0, panels, table, level, tablePosition, panel);
+
                     for(int z = 0; z < combinations; z++) {
 
-                        System.out.println("1st is: " + (inputSize-z-OFFSET) + ", " + tablePosition);
-                        System.out.println("2nd is: " + (level+z+OFFSET) + ", " + (tablePosition+z+OFFSET));
-                        System.out.println("1st: " + table.elementAt(inputSize-z-OFFSET).get(tablePosition));
-                        System.out.println("2nd: " + table.elementAt(level+z+OFFSET).get(tablePosition+z+OFFSET));
+                        if(LOG) {
+                            System.out.println("1st is: " + (inputSize - z - OFFSET) + ", " + tablePosition);
+                            System.out.println("2nd is: " + (level + z + OFFSET) + ", " + (tablePosition + z + OFFSET));
+                            System.out.println("1st: " + table.elementAt(inputSize - z - OFFSET).get(tablePosition));
+                            System.out.println("2nd: " + table.elementAt(level + z + OFFSET).get(tablePosition + z + OFFSET));
+                        }
 
-                        possibleInputs.addAll(makeInputs(table.elementAt(inputSize-z-OFFSET).get(tablePosition), table.elementAt(level+z+OFFSET).get(tablePosition+z+OFFSET)));
-                        System.out.println("Inputs: ");
-                        System.out.println(possibleInputs.toString());
+                        fillPanel(1, panels, table, inputSize - z - OFFSET, tablePosition, panel);
+                        fillPanel(1, panels, table, level + z + OFFSET, tablePosition + z + OFFSET, panel);
+                        catchSomeZs();
+
+                        possibleInputs.addAll(makeInputs(table.elementAt(inputSize - z - OFFSET).get(tablePosition), table.elementAt(level + z + OFFSET).get(tablePosition + z + OFFSET)));
+
+                        fillPanel(2, panels, table, inputSize - z - OFFSET, tablePosition, panel);
+                        fillPanel(2, panels, table, level + z + OFFSET, tablePosition + z + OFFSET, panel);
+                        catchSomeZs();
+
+                        if(LOG) {
+                            System.out.println("Inputs: ");
+                            System.out.println(possibleInputs.toString());
+                        }
                     }
 
                     table.elementAt(level).set(tablePosition, getKeys(possibleInputs));
-                    printTable(table);
+                    fillPanel(2, panels, table, level, tablePosition, panel);
+
+                    if(LOG)
+                        printTable(table);
+
                 }
             }
-            printTable(table);
+
+            if(LOG)
+                printTable(table);
         }
 
 
@@ -117,7 +190,55 @@ public class CYK {
             return false;
     }
 
-    private static void printTable (Vector<ArrayList<Vector<String>>> t) {
+    private void catchSomeZs() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Mode 0 = Filling this square, Mode 1 = Comparing these squares, Mode 2 = done
+    private void fillPanel(int mode, Vector<JPanel> panels, Vector<ArrayList<Vector<String>>> table, int level, int tablePosition, JPanel panel) {
+
+        switch(mode) {
+            case 0:
+                panels.elementAt((inputSize * level) + tablePosition).setBackground(Color.CYAN);
+                String labelName = "Analysing";
+                JLabel cellLabel = new JLabel(labelName);
+                panels.elementAt((inputSize * level) + tablePosition).add(cellLabel);
+                break;
+            case 1:
+                panels.elementAt((inputSize * level) + tablePosition).setBackground(Color.RED);
+                break;
+            case 2:
+                panels.elementAt((inputSize * level) + tablePosition).setBackground(Color.LIGHT_GRAY);
+                String labelName1 = table.elementAt(level).get(tablePosition).toString();
+                JLabel cellLabel1 = new JLabel(labelName1);
+                panels.elementAt((inputSize * level) + tablePosition).removeAll();
+                panels.elementAt((inputSize * level) + tablePosition).add(cellLabel1);
+                break;
+
+        }
+        panels.elementAt((inputSize * level) + tablePosition).revalidate();
+        panel.revalidate();
+
+    }
+
+    private void initCellPanels(Vector<String> toProcess, Vector<JPanel> panels, JPanel panel) {
+
+        for(int i = 0; i < toProcess.size(); i++){
+            for(int j = 0; j < toProcess.size(); j++)
+            {
+                JPanel cellPanel = new JPanel();
+                cellPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+                panels.add(cellPanel);
+                panel.add(cellPanel);
+            }
+        }
+    }
+
+    private void printTable (Vector<ArrayList<Vector<String>>> t) {
 
         for (int i = 0; i < inputSize; i++){
 
@@ -131,7 +252,7 @@ public class CYK {
         System.out.println("--- \\\\ --- ");
     }
 
-    private static Vector<String> makeInputs(Vector<String> s0, Vector<String> s1) {
+    private Vector<String> makeInputs(Vector<String> s0, Vector<String> s1) {
 
         Vector<String> ret = new Vector<String>();
 
@@ -146,15 +267,18 @@ public class CYK {
             }
         }
 
-        System.out.println("RET VEC IS: "+ ret.toString());
+        if(LOG)
+            System.out.println("RET VEC IS: "+ ret.toString());
+
         return ret;
     }
 
-    private static Vector<String> getKeys(Vector<String> svec)
+    private Vector<String> getKeys(Vector<String> svec)
     {
         Vector<String> rtrn = new Vector<String>();
 
-        System.out.println("SVEC: " + svec.toString());
+        if(LOG)
+            System.out.println("SVEC: " + svec.toString());
 
         for(int k = 0; k < svec.size(); k++)
         {
@@ -165,7 +289,8 @@ public class CYK {
                 String rhs = getRHSProduction(productions.elementAt(i));
                 String lhs = getLHSProduction(productions.elementAt(i));
 
-                System.out.println( "Comparing: " + rhs + " with " + s + " /");
+                if(LOG)
+                    System.out.println( "Comparing: " + rhs + " with " + s + " /");
 
                 if(rhs.equals(s) && !rtrn.contains(lhs))
                 {
@@ -177,24 +302,28 @@ public class CYK {
         if(rtrn.size() == 0)
             rtrn.add("-");
 
-        System.out.println("Ret is: " + rtrn.toString());
+        if(LOG)
+            System.out.println("Ret is: " + rtrn.toString());
+
         return rtrn;
 
     }
 
-    private static Vector<String> get1stKeys(Vector<String> vs, int position)
+    private Vector<String> get1stKeys(Vector<String> vs, int position)
     {
 
         Vector<String> rtrn = new Vector<String>();
 
-        System.out.println("VS IS:" + vs);
+        if(LOG)
+            System.out.println("VS IS:" + vs);
 
         for(int j = 0; j < productions.size(); j++)
         {
             String rhs = getRHSProduction(productions.elementAt(j));
             String lhs = getLHSProduction(productions.elementAt(j));
 
-            System.out.println( "Comparing: " + vs.elementAt(position) + " with "  + rhs + " /");
+            if(LOG)
+                System.out.println( "Comparing: " + vs.elementAt(position) + " with "  + rhs + " /");
 
             if(rhs.toString().equals(vs.elementAt(position)) && !rtrn.contains(lhs))
             {
@@ -202,12 +331,14 @@ public class CYK {
             }
         }
 
-        System.out.println("Ret is: " + rtrn.toString());
+        if(LOG)
+            System.out.println("Ret is: " + rtrn.toString());
+
         return rtrn;
 
     }
 
-    private static String getRHSProduction(Vector<String> production)
+    private String getRHSProduction(Vector<String> production)
     {
         String rtrn = new String();
 
@@ -223,66 +354,27 @@ public class CYK {
 
     }
 
-    private static String getLHSProduction(Vector<String> production)
+    private String getLHSProduction(Vector<String> production)
     {
         return production.elementAt(0);
     }
 
-
-    private static String[] splitInput(String input) {
-        String []split_msg = input.split("\\|+");
-
-        /*
-        for(int i = 0; i < split_msg.length; i++)
-        {
-            System.out.println("Splitted " + i + ": " + split_msg[i]);
-        }
-        */
-        return split_msg;
-    }
-
-    private static int summatory(int length) {
-
-        int sum = 0;
-
-        while(length > 0)
-        {
-            sum += length;
-            length--;
-        }
-
-        return sum;
-    }
-
-    public static Vector<String> copyOfRange(Vector<String> v, int start, int end) {
-
-        Vector<String> retrn = new Vector<String>();
-
-        if(end <= start)
-        {
-            System.out.println("Error copying range of vector.");
-            return null;
-        }
-
-        for(int i = start; i < end; i++)
-        {
-            retrn.add(v.elementAt(i));
-        }
-
-        return retrn;
-    }
-
     public static void main(String args[]) throws IOException{
-        loadGrammar("C:\\Users\\Pedro\\GIT\\COMP\\CYK Algorithm\\src\\grammar2");
+
+        CYK algorithm = new CYK();
+        algorithm.loadGrammar("C:\\Users\\Carlos\\Documents\\IntelliJ Workspace\\CYK Algorithm\\src\\grammar2");
 
         String input = "she eats a fish with a fork";
+        //String input = "b b a b a a";
 
-        Vector<String> toProcess = splitString(input);
+        Vector<String> toProcess = algorithm.splitString(input);
 
         inputSize = toProcess.size();
-        System.out.println("this " + inputSize);
 
-        if(CYKparser(toProcess))
+        if(LOG)
+            System.out.println("this " + inputSize);
+
+        if(algorithm.CYKparser(toProcess, input))
         {
             System.out.println("Great Success");
         }
