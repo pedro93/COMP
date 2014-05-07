@@ -21,7 +21,6 @@ import java.util.Vector;
 
 import common.Structure;
 import common.Type;
-import algorithm.CYK;
 import algorithm.ChomskyConverter;
 
 public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@egen*/ Runnable
@@ -32,7 +31,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 
 	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
 	private Vector<Structure> AcessableTokens = new Vector<Structure>();
-	private Vector<String> toProcess = new Vector<String>();
 	private String filePath;
 	private File grammarFile;
 	
@@ -61,7 +59,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 			if(!isValid)
 				return;
 			
-			System.out.println("Symbol table size: "+SymbolTable.size());
 			printSymbolTable();
 
 			ChomskyConverter cnf = new ChomskyConverter(SymbolTable) ;
@@ -197,10 +194,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 				isValid=false;
 			}
 		}
-		else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
-		{
-			toProcess.add(node.Symbol.name);
-		}
 		else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
 		{
 			System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
@@ -279,11 +272,11 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
 {/*@bgen(jjtree) Expression */
         try {
 /*@egen*/
-	(StartAtribution())+ (Atribution())* < STRING > (stringToTest())+< END >/*@bgen(jjtree)*/
-                                                                                {
-                                                                                  jjtree.closeNodeScope(jjtn000, true);
-                                                                                  jjtc000 = false;
-                                                                                }
+	(StartAtribution())+ (Atribution())* < END >/*@bgen(jjtree)*/
+                                                    {
+                                                      jjtree.closeNodeScope(jjtn000, true);
+                                                      jjtc000 = false;
+                                                    }
 /*@egen*/{return jjtn000;}/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {
@@ -305,34 +298,6 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
           }
         }
 /*@egen*/ // c\u00c3\u00b3digo Java entre chavetas 
-}
-
-void stringToTest():{/*@bgen(jjtree) stringToTest */
-                     SimpleNode jjtn000 = new SimpleNode(JJTSTRINGTOTEST);
-                     boolean jjtc000 = true;
-                     jjtree.openNodeScope(jjtn000);
-/*@egen*/Token t;}
-{/*@bgen(jjtree) stringToTest */
- try {
-/*@egen*/
- t=< Term >/*@bgen(jjtree)*/
- {
-   jjtree.closeNodeScope(jjtn000, true);
-   jjtc000 = false;
- }
-/*@egen*/
- {
- 	jjtn000.Symbol.name = new String(t.image);
-	jjtn000.Symbol.line=t.beginLine;
-	jjtn000.Symbol.column=t.beginColumn;
-	jjtn000.Symbol.type=Type.STRING;
-  }/*@bgen(jjtree)*/
- } finally {
-   if (jjtc000) {
-     jjtree.closeNodeScope(jjtn000, true);
-   }
- }
-/*@egen*/
 }
 
 void StartAtribution():{/*@bgen(jjtree) StartAtribution */

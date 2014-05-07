@@ -28,7 +28,6 @@ public class Console implements Runnable
 		{
 			while ((line = reader.readLine()) != null)
 			{
-
 				displayPane.append( line + "\n" );
 				displayPane.setCaretPosition( displayPane.getDocument().getLength() );
 

@@ -147,6 +147,7 @@ public class Window extends JFrame {
 		panels = new Vector<JPanel>();
 		panels.add(new StartPnl(this));
 		panels.add(new ParsePnl(this));
+		panels.add(new CYKPnl(this));
 	}
 
 	public void runFile(String filePath){
@@ -159,17 +160,17 @@ public class Window extends JFrame {
 		if(extension.equals("grm")) //grammar file to be tested
 		{
 			showPanel(1);
-			((ParsePnl) panels.get(1)).runParser();
+			//((ParsePnl) panels.get(1)).runParser();
 		}
 		else if(extension.equals("ser"))
 		{
-			//showPanel(2);
+			showPanel(2);
 			//((CYKPnl) panels.get(2)).run();
 		}
 	}
 
 	public void runCYK() {
-		//shows CYK panel, enter string -> run algorithm with animation;		
+		showPanel(2);
 	}
 
 }

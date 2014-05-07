@@ -1,5 +1,6 @@
 package gui;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -25,6 +26,9 @@ public class ParsePnl extends JPanel {
 	private Window parent;
 	private JTextArea textArea;
 	private JButton btnRunAlgorithm;
+	private CNFParser parser=null;
+
+	
 	public ParsePnl(Window par) {
 		super();
 		this.parent = par;
@@ -37,11 +41,12 @@ public class ParsePnl extends JPanel {
 		lblConsoleOutput.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblConsoleOutput, BorderLayout.NORTH);
 
+		
 		textArea= new JTextArea(20,35);
-		textArea.setEnabled(false);
 		textArea.setLineWrap(true); //Auto down line if the line is too long
 		textArea.setEditable(false);
 		textArea.setWrapStyleWord(true);
+		//textArea.setForeground(Color.cyan);
 		JScrollPane scrollPane = new JScrollPane( textArea );
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -65,15 +70,22 @@ public class ParsePnl extends JPanel {
 				parent.runCYK();
 			}
 		});
+		
+		JButton btnCompileGrammar = new JButton("Compile Grammar");
+		btnCompileGrammar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				runParser();
+			}
+		});
+		panel.add(btnCompileGrammar);
 		panel.add(btnRunAlgorithm);
 		setVisible(true);     
 	}
 
-	public void runParser() {
+	private void runParser() {
 		Console.redirectOutput( textArea );
-		CNFParser parser=null;
 		try {
-			parser = new CNFParser(parent.filePath);
+			parser = new CNFParser(Window.filePath);
 			parser.run();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -82,11 +94,13 @@ public class ParsePnl extends JPanel {
 		if(parser!=null)
 			if(parser.isValid)
 			{
-				//parser.saveGrammarToFile();
 				btnRunAlgorithm.setEnabled(true); 
-				return; //enabled next button
+				return;
 			}
-
+			else
+			{
+				JOptionPane.showMessageDialog(this, "Grammar is not valid, please check console output for more information");
+			}
 		//stay in this panel or return
 	}
 

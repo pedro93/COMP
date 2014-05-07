@@ -12,7 +12,6 @@ import java.util.TreeMap;
 import java.util.Vector;
 import common.Structure;
 import common.Type;
-import algorithm.CYK;
 import algorithm.ChomskyConverter;
 
 /** Token Manager. */

@@ -14,14 +14,12 @@ import java.util.Vector;
 
 import common.Structure;
 import common.Type;
-import algorithm.CYK;
 import algorithm.ChomskyConverter;
 
 public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnable, CNFParserConstants {/*@bgen(jjtree)*/
   protected static JJTCNFParserState jjtree = new JJTCNFParserState();
         private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
         private Vector<Structure> AcessableTokens = new Vector<Structure>();
-        private Vector<String> toProcess = new Vector<String>();
         private String filePath;
         private File grammarFile;
 
@@ -50,7 +48,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                         if(!isValid)
                                 return;
 
-                        System.out.println("Symbol table size: "+SymbolTable.size());
                         printSymbolTable();
 
                         ChomskyConverter cnf = new ChomskyConverter(SymbolTable) ;
@@ -188,10 +185,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 isValid=false;
                         }
                 }
-                else if(node.id==CNFParserTreeConstants.JJTSTRINGTOTEST)
-                {
-                        toProcess.add(node.Symbol.name);
-                }
                 else if(node.id!=CNFParserTreeConstants.JJTEXPRESSION)
                 {
                         System.err.println("[Error] Ilegal operator in line "+node.Symbol.line+" ,column "+node.Symbol.column+" !");
@@ -270,23 +263,10 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
         }
         Atribution();
       }
-      jj_consume_token(STRING);
-      label_3:
-      while (true) {
-        stringToTest();
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case Term:
-          ;
-          break;
-        default:
-          jj_la1[2] = jj_gen;
-          break label_3;
-        }
-      }
       jj_consume_token(END);
-                                                                                  jjtree.closeNodeScope(jjtn000, true);
-                                                                                  jjtc000 = false;
-                                                                                 {if (true) return jjtn000;}
+                                                      jjtree.closeNodeScope(jjtn000, true);
+                                                      jjtc000 = false;
+                                                     {if (true) return jjtn000;}
     } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -309,26 +289,6 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     throw new Error("Missing return statement in function");
   }
 
-  static final public void stringToTest() throws ParseException {
-                     /*@bgen(jjtree) stringToTest */
-                     SimpleNode jjtn000 = new SimpleNode(JJTSTRINGTOTEST);
-                     boolean jjtc000 = true;
-                     jjtree.openNodeScope(jjtn000);Token t;
-    try {
-      t = jj_consume_token(Term);
-   jjtree.closeNodeScope(jjtn000, true);
-   jjtc000 = false;
-        jjtn000.Symbol.name = new String(t.image);
-        jjtn000.Symbol.line=t.beginLine;
-        jjtn000.Symbol.column=t.beginColumn;
-        jjtn000.Symbol.type=Type.STRING;
-    } finally {
-   if (jjtc000) {
-     jjtree.closeNodeScope(jjtn000, true);
-   }
-    }
-  }
-
   static final public void StartAtribution() throws ParseException {
                         /*@bgen(jjtree) StartAtribution */
                          SimpleNode jjtn000 = new SimpleNode(JJTSTARTATRIBUTION);
@@ -341,7 +301,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                 jjtn000.Symbol.line=lhs.beginLine;
                 jjtn000.Symbol.column=lhs.beginColumn;
                 jjtn000.Symbol.type=Type.START;
-      label_4:
+      label_3:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case Term:
@@ -360,13 +320,13 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                               jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));
             break;
           default:
-            jj_la1[3] = jj_gen;
+            jj_la1[2] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
           break;
         default:
-          jj_la1[4] = jj_gen;
+          jj_la1[3] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -377,23 +337,23 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
           ;
           break;
         default:
-          jj_la1[5] = jj_gen;
-          break label_4;
+          jj_la1[4] = jj_gen;
+          break label_3;
         }
       }
-      label_5:
+      label_4:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case OR:
           ;
           break;
         default:
-          jj_la1[6] = jj_gen;
-          break label_5;
+          jj_la1[5] = jj_gen;
+          break label_4;
         }
         jj_consume_token(OR);
          jjtn000.Variables.add(new Vector<Structure >());
-        label_6:
+        label_5:
         while (true) {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case Term:
@@ -412,13 +372,13 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                       jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));
               break;
             default:
-              jj_la1[7] = jj_gen;
+              jj_la1[6] = jj_gen;
               jj_consume_token(-1);
               throw new ParseException();
             }
             break;
           default:
-            jj_la1[8] = jj_gen;
+            jj_la1[7] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
@@ -429,8 +389,8 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
             ;
             break;
           default:
-            jj_la1[9] = jj_gen;
-            break label_6;
+            jj_la1[8] = jj_gen;
+            break label_5;
           }
         }
       }
@@ -454,7 +414,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                 jjtn000.Symbol.line=lhs.beginLine;
                 jjtn000.Symbol.column=lhs.beginColumn;
                 jjtn000.Symbol.type=Type.NONTERM;
-      label_7:
+      label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case Term:
@@ -473,13 +433,13 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                               jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));
             break;
           default:
-            jj_la1[10] = jj_gen;
+            jj_la1[9] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
           break;
         default:
-          jj_la1[11] = jj_gen;
+          jj_la1[10] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -490,23 +450,23 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
           ;
           break;
         default:
-          jj_la1[12] = jj_gen;
-          break label_7;
+          jj_la1[11] = jj_gen;
+          break label_6;
         }
       }
-      label_8:
+      label_7:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case OR:
           ;
           break;
         default:
-          jj_la1[13] = jj_gen;
-          break label_8;
+          jj_la1[12] = jj_gen;
+          break label_7;
         }
         jj_consume_token(OR);
          jjtn000.Variables.add(new Vector<Structure >());
-        label_9:
+        label_8:
         while (true) {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case Term:
@@ -525,13 +485,13 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                       jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));
               break;
             default:
-              jj_la1[14] = jj_gen;
+              jj_la1[13] = jj_gen;
               jj_consume_token(-1);
               throw new ParseException();
             }
             break;
           default:
-            jj_la1[15] = jj_gen;
+            jj_la1[14] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
@@ -542,8 +502,8 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
             ;
             break;
           default:
-            jj_la1[16] = jj_gen;
-            break label_9;
+            jj_la1[15] = jj_gen;
+            break label_8;
           }
         }
       }
@@ -565,13 +525,13 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[17];
+  static final private int[] jj_la1 = new int[16];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x20,0x800,0x1000,0x820,0x1820,0x1820,0x200,0x820,0x1820,0x1820,0x820,0x1820,0x1820,0x200,0x820,0x1820,0x1820,};
+      jj_la1_0 = new int[] {0x20,0x800,0x820,0x1820,0x1820,0x200,0x820,0x1820,0x1820,0x820,0x1820,0x1820,0x200,0x820,0x1820,0x1820,};
    }
 
   /** Constructor with InputStream. */
@@ -592,7 +552,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -607,7 +567,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -624,7 +584,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -635,7 +595,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -651,7 +611,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -661,7 +621,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 17; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -717,7 +677,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 17; i++) {
+    for (int i = 0; i < 16; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

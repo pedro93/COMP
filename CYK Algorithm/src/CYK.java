@@ -63,7 +63,7 @@ public class CYK {
         return toAdd;
     }
 
-    public boolean CYKparser(Vector<String> toProcess, String input) {
+        public boolean CYKparser(Vector<String> toProcess, String input) {
 
         //Window Functions
 
@@ -362,7 +362,7 @@ public class CYK {
     public static void main(String args[]) throws IOException{
 
         CYK algorithm = new CYK();
-        algorithm.loadGrammar("C:\\Users\\Carlos\\Documents\\IntelliJ Workspace\\CYK Algorithm\\src\\grammar2");
+        algorithm.loadGrammar("C:\\Users\\Pedro\\GIT\\COMP\\CYK Algorithm\\src\\grammar2");
 
         String input = "she eats a fish with a fork";
         //String input = "b b a b a a";

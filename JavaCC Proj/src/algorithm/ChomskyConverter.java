@@ -578,7 +578,7 @@ public class ChomskyConverter {
 	}
 
 	/**
-	 * prints to the console the invalid production founded on the grammar. 
+	 * prints to the console the invalid production found on the grammar. 
 	 * In case the error isn't known, this function won't print anything
 	 * @param prod : is the invalid CNF production founded
 	 * @param error : type of error; type of invalid production
@@ -593,19 +593,19 @@ public class ChomskyConverter {
 		
 		switch(error){
 		case 1:
-			System.out.println("> [Invalid] No. Founded a production which exceded number of symbols.") ;
+			System.out.println("> [Invalid] Found a production which exceded number of symbols.") ;
 			break;
 		case 2:
-			System.out.println("> [Invalid] No. There is a loop on START.") ;
+			System.out.println("> [Invalid] There is a loop on START.") ;
 			break;
 		case 3:
-			System.out.println("> [Invalid] No. Founded a production that violates rule P->P1 P2.") ;
+			System.out.println("> [Invalid] Found a production that violates rule P->P1 P2.") ;
 			break;
 		case 4:
-			System.out.println("> [Invalid] No. Founded a production that violates rule P->a.") ;
+			System.out.println("> [Invalid] Found a production that violates rule P->a.") ;
 			break;
 		case 5:
-			System.out.println("> [Invalid] No. Founded a production to epsilon.") ;
+			System.out.println("> [Invalid] Found a production to epsilon.") ;
 			break;
 		default:
 			return ;
