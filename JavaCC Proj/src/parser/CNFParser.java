@@ -22,6 +22,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
         private Vector<Structure> AcessableTokens = new Vector<Structure>();
         private String filePath;
         private File grammarFile;
+        public String newFilePath;
 
         public boolean isValid=false;
         public boolean saveSucessful=false;
@@ -77,8 +78,8 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
 
                 try{
                         //Save to file
-
-                        fOut= new FileOutputStream(fileName+".ser");
+                        newFilePath = fileName+".ser";
+                        fOut= new FileOutputStream(newFilePath);
                         oOut = new ObjectOutputStream(fOut);
                         oOut.writeObject(productions);
                         System.out.println("Save sucessful");

@@ -58,6 +58,7 @@ public class ParsePnl extends JPanel {
 		JButton btnCanel = new JButton("Cancel");
 		btnCanel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Console.clear();
 				parent.showPanel(0);
 			}
 		});
@@ -67,6 +68,7 @@ public class ParsePnl extends JPanel {
 		btnRunAlgorithm.setEnabled(false);
 		btnRunAlgorithm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Console.clear();
 				parent.runCYK();
 			}
 		});
@@ -94,7 +96,8 @@ public class ParsePnl extends JPanel {
 		if(parser!=null)
 			if(parser.isValid)
 			{
-				btnRunAlgorithm.setEnabled(true); 
+				btnRunAlgorithm.setEnabled(true);
+				Window.filePath=parser.newFilePath;
 				return;
 			}
 			else

@@ -8,6 +8,8 @@ public class Console implements Runnable
 {
 	JTextArea displayPane;
 	BufferedReader reader;
+	static PrintStream out = System.out;
+	static PrintStream err = System.err;
 
 	private Console(JTextArea displayPane, PipedOutputStream pos)
 	{
@@ -63,6 +65,11 @@ public class Console implements Runnable
 
 		Console console = new Console(displayPane, pos);
 		new Thread(console).start();
+	}
+
+	public static void clear() {
+		System.setOut(Console.out);
+		System.setErr(Console.err);
 	}
 
 }

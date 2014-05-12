@@ -147,7 +147,7 @@ public class Window extends JFrame {
 		panels = new Vector<JPanel>();
 		panels.add(new StartPnl(this));
 		panels.add(new ParsePnl(this));
-		panels.add(new CYKPnl(this));
+		panels.add(new CYKPnl(this));	
 	}
 
 	public void runFile(String filePath){
@@ -170,6 +170,7 @@ public class Window extends JFrame {
 	}
 
 	public void runCYK() {
+		System.out.println("filePath used: "+Window.filePath);
 		showPanel(2);
 	}
 

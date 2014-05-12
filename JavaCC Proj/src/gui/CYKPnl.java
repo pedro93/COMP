@@ -30,13 +30,14 @@ public class CYKPnl extends JPanel {
 	Vector<JPanel> panels;
 	private CYK algorithm;
 	private Window parent;
-	private boolean pause;
+	private boolean pause,cancel;
 	private JButton btnPause;
+	private JButton runButton;
 
 	public CYKPnl(Window window) {
 		pause=true;
+		cancel=false;
 		this.parent = window;
-		algorithm = new CYK(this);
 		toProcess = new Vector<String>();
 		panels = new Vector<JPanel>();
 
@@ -61,20 +62,35 @@ public class CYKPnl extends JPanel {
 		JPanel panel_1 = new JPanel();
 		panel.add(panel_1, BorderLayout.EAST);
 
-		JButton btnNewButton = new JButton("Run");
-		panel_1.add(btnNewButton);
-		btnNewButton.addActionListener(new ActionListener() {
+		runButton = new JButton("Run");
+		panel_1.add(runButton);
+		runButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
-				if(!algorithm.isAlive())
+				if(!cancel)
 				{
-					String inputString = textField.getText();
-					toProcess = algorithm.splitString(inputString);
-					createGridPanels();
-					run();
+					if(algorithm==null||!algorithm.isAlive())
+					{
+						String inputString = textField.getText();
+						toProcess = CYK.splitString(inputString);
+						createGridPanels();
+						run();
+					}
+					runButton.setText("Cancel");
+					cancel=true;
+					revalidate();
 				}
+				else
+				{
+					algorithm.stop();
+					cancel=true;
+					clear();
+					parent.showPanel(0);
+				}
+
 			}
 		});
-		btnNewButton.setHorizontalAlignment(SwingConstants.TRAILING);
+		runButton.setHorizontalAlignment(SwingConstants.TRAILING);
 
 		btnPause = new JButton("Pause");
 		btnPause.addActionListener(new ActionListener() {
@@ -118,6 +134,7 @@ public class CYKPnl extends JPanel {
 	}
 
 	public void run() {
+		algorithm = new CYK(this, 200);
 		algorithm.loadGrammar(Window.filePath);
 		algorithm.setup(toProcess,AlgPnl,panels);
 		algorithm.start();
@@ -126,14 +143,32 @@ public class CYKPnl extends JPanel {
 	public void showOutput() {
 		int n;
 		if(algorithm.isSuccessful)
-			n = JOptionPane.showConfirmDialog(this, "GREAT SUCESS\nInput String is valid using the grammar choosen!\nReturn to main menu?","Algorithm output", JOptionPane.YES_NO_OPTION);
+			n = JOptionPane.showConfirmDialog(this, "GREAT SUCCESS\nInput String is valid using the grammar choosen!\nReturn to main menu?","Algorithm output", JOptionPane.YES_NO_OPTION);
 		else
 			n = JOptionPane.showConfirmDialog(this, "Nope, not valid\nReturn to main menu?","Algorithm output",JOptionPane.YES_NO_OPTION);
-		
+
 		if(n==JOptionPane.YES_OPTION)
 		{
+			clear();
 			parent.showPanel(0);
 		}
 	}
-
+	
+	private void clear()
+	{
+		for(JPanel pan:panels)
+			AlgPnl.remove(pan);
+		AlgPnl.revalidate();
+		toProcess.clear();
+		panels.clear();
+		algorithm.interrupt();
+		algorithm.reset();
+		textField.setText("");
+		runButton.setText("Run");
+		btnPause.setText("Pause");
+		cancel = false;
+		pause=true;
+		algorithm=null;
+		System.gc();
+	}
 }
