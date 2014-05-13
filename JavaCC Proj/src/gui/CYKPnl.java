@@ -1,22 +1,20 @@
 package gui;
 
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
 
-import algorithm.CYK;
-
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import java.util.Vector;
+
+import algorithm.CYK;
 
 public class CYKPnl extends JPanel {
 
@@ -62,36 +60,6 @@ public class CYKPnl extends JPanel {
 		JPanel panel_1 = new JPanel();
 		panel.add(panel_1, BorderLayout.EAST);
 
-		runButton = new JButton("Run");
-		panel_1.add(runButton);
-		runButton.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
-			public void actionPerformed(ActionEvent e) {
-				if(!cancel)
-				{
-					if(algorithm==null||!algorithm.isAlive())
-					{
-						String inputString = textField.getText();
-						toProcess = CYK.splitString(inputString);
-						createGridPanels();
-						run();
-					}
-					runButton.setText("Cancel");
-					cancel=true;
-					revalidate();
-				}
-				else
-				{
-					algorithm.stop();
-					cancel=true;
-					clear();
-					parent.showPanel(0);
-				}
-
-			}
-		});
-		runButton.setHorizontalAlignment(SwingConstants.TRAILING);
-
 		btnPause = new JButton("Pause");
 		btnPause.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
@@ -112,7 +80,39 @@ public class CYKPnl extends JPanel {
 				}
 			}
 		});
+		btnPause.setEnabled(false);
 		panel_1.add(btnPause);
+
+		runButton = new JButton("Run");
+		panel_1.add(runButton);
+		runButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent e) {
+				if(!cancel)
+				{
+					if(algorithm==null||!algorithm.isAlive())
+					{
+						String inputString = textField.getText();
+						toProcess = CYK.splitString(inputString);
+						createGridPanels();
+						run();
+					}
+					runButton.setText("Cancel");
+					cancel=true;
+					revalidate();
+				}
+				else
+				{
+					btnPause.setEnabled(false);
+					algorithm.stop();
+					cancel=true;
+					clear();
+					parent.showPanel(0);
+				}
+
+			}
+		});
+		runButton.setHorizontalAlignment(SwingConstants.TRAILING);
 
 		JLabel lblNewLabel = new JLabel("CYK Algorithm Animation");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -125,7 +125,7 @@ public class CYKPnl extends JPanel {
 			for(int j = 0; j < toProcess.size(); j++)
 			{
 				JPanel cellPanel = new JPanel();
-				cellPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+				//cellPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 				panels.add(cellPanel);
 				AlgPnl.add(cellPanel);
 			}
@@ -134,6 +134,7 @@ public class CYKPnl extends JPanel {
 	}
 
 	public void run() {
+		btnPause.setEnabled(true);
 		algorithm = new CYK(this, 200);
 		algorithm.loadGrammar(Window.filePath);
 		algorithm.setup(toProcess,AlgPnl,panels);
@@ -153,7 +154,7 @@ public class CYKPnl extends JPanel {
 			parent.showPanel(0);
 		}
 	}
-	
+
 	private void clear()
 	{
 		for(JPanel pan:panels)
@@ -166,6 +167,7 @@ public class CYKPnl extends JPanel {
 		textField.setText("");
 		runButton.setText("Run");
 		btnPause.setText("Pause");
+		btnPause.setEnabled(false);
 		cancel = false;
 		pause=true;
 		algorithm=null;

@@ -30,7 +30,7 @@ public class AboutPnl extends JPanel {
 		
 		JLabel lblDeveloped = new JLabel("  Developed by:");
 		panel_1.add(lblDeveloped);
-		lblDeveloped.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDeveloped.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel lblNewLabel_1 = new JLabel("Carlos Matias");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -48,7 +48,7 @@ public class AboutPnl extends JPanel {
 		lblPedroSilva.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblPedroSilva);
 		
-		JLabel lblNewLabel_3 = new JLabel("As a project in the compiler course\r\n MIEIC FEUP 2012/2014 Porto,Portugal");
+		JLabel lblNewLabel_3 = new JLabel("As a project in the compiler course\r\n MIEIC FEUP 2013/2014 Porto,Portugal");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_1.add(lblNewLabel_3);
 		
