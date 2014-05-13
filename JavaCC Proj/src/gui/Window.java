@@ -104,6 +104,11 @@ public class Window extends JFrame {
 		mnHelp.add(mntmGetHelp);
 
 		JMenuItem mntmAbout = new JMenuItem("About");
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showPanel(3);
+			}
+		});
 		mnHelp.add(mntmAbout);
 		showPanel(0);
 	}
@@ -147,7 +152,8 @@ public class Window extends JFrame {
 		panels = new Vector<JPanel>();
 		panels.add(new StartPnl(this));
 		panels.add(new ParsePnl(this));
-		panels.add(new CYKPnl(this));	
+		panels.add(new CYKPnl(this));
+		panels.add(new AboutPnl(this));
 	}
 
 	public void runFile(String filePath){
