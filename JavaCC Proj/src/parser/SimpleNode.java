@@ -76,7 +76,7 @@ class SimpleNode implements Node {
      out its children. */
 
   public void dump(String prefix) {
-  //  System.out.println(toString(prefix));
+    System.out.println(toString(prefix));
     if(id!=0)	
     	System.out.println("  "+Symbol+"->"+Variables.toString());
     if (children != null) {

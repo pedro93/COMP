@@ -44,6 +44,8 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                         //Create Symbol Table
                         this.createSymbolTable(root);
 
+                        //root.dump("");
+
                         this.SemanticAnalysis();
 
                         if(!isValid)

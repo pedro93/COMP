@@ -86,9 +86,6 @@ public class Window extends JFrame {
 		});
 		mnLoad.add(mntmGrammar);
 
-		JMenuItem mntmSave = new JMenuItem("Save");
-		mnFile.add(mntmSave);
-
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mntmExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -100,10 +97,15 @@ public class Window extends JFrame {
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 
-		JMenuItem mntmGetHelp = new JMenuItem("Get Help!!!");
+		JMenuItem mntmGetHelp = new JMenuItem("Help content");
+		mntmGetHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showPanel(4);
+			}
+		});
 		mnHelp.add(mntmGetHelp);
 
-		JMenuItem mntmAbout = new JMenuItem("About");
+		JMenuItem mntmAbout = new JMenuItem("About this program");
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showPanel(3);
@@ -154,6 +156,7 @@ public class Window extends JFrame {
 		panels.add(new ParsePnl(this));
 		panels.add(new CYKPnl(this));
 		panels.add(new AboutPnl(this));
+		panels.add(new HelpPnl(this));
 	}
 
 	public void runFile(String filePath){

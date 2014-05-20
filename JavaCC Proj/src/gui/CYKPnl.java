@@ -18,9 +18,6 @@ import algorithm.CYK;
 
 public class CYKPnl extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8168510640830905489L;
 	private JTextField textField;
 	private JPanel AlgPnl;
