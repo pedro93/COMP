@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import javax.swing.SwingConstants;
@@ -49,10 +50,13 @@ public class HelpPnl extends JPanel {
 		JTextArea textArea = new JTextArea();
 		textArea.setWrapStyleWord(true);
 		textArea.setLineWrap(true);
-		textArea.setEnabled(false);
 		textArea.setEditable(false);
 		textArea.append("This program is used to validate grammars in described written in files and posteriorly used to validate a string, using the grammar selected.\n\n");
-		textArea.append("There are 2 types of files:\n.grm are files describing a grammar using the program's convention (See Readme.txt).\n.ser are previsously compiled files, already validated by the program and ready to be used for string validation.");
-		panel_1.add(textArea);
+		textArea.append("There are 2 types of files:\n.grm are files describing a grammar using the program's convention (See README.txt).\n.ser are previsously compiled files, already validated by the program and ready to be used for string validation.");
+		textArea.append("\n\nFor aditional information please see the README file.");
+		textArea.setBackground(null);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+
+		panel_1.add(scrollPane);
 	}
 }
