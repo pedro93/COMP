@@ -67,7 +67,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 			ChomskyConverter cnf = new ChomskyConverter(SymbolTable) ;
 			Vector < Vector <String >> productions = new Vector < Vector<String >>() ;  
 			productions = cnf.CNFconverter() ;
-			saveGrammarToFile( productions );	
+			saveGrammarToFile( productions );			
 			System.out.println("Data structure from: "+grammarFile.getName()+" parsed and validated, next run CYK Algorithm");
 			
 
@@ -119,20 +119,24 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 		Structure key;
 		System.out.println("TreeHash");
 		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet())
-		{
-			value=entry.getValue();
-			key=entry.getKey();
-			System.out.print("Key: "+key.toString()+" -> Values:");
-			for (Vector<Structure> i : value) {
-				System.out.print("[");
-				for(Structure x:i)
-				{
-					System.out.print(x.toString()+",");
-				}
-				System.out.print("]");
-			}
-			System.out.println();
-		}
+        {
+        	value=entry.getValue();
+        	key=entry.getKey();
+        	System.out.print("Key: "+key.toString()+" -> Values:");
+        	for (Vector<Structure> i : value) {
+        		System.out.print("[");
+        		for(Structure x:i)
+        		{
+        			System.out.print(x.toString());
+        			if(i.lastElement()!=x)
+        				System.out.print(",");
+        		}
+        		System.out.print("]");
+        		if(value.indexOf(i)!=value.size()-1)
+					System.out.print(",");
+	        }
+    	    System.out.println();
+        }
 	}
 
 	void createSymbolTable(SimpleNode node) {
@@ -263,8 +267,9 @@ TOKEN:
  < ENDPROD: ";">|
  < OR: "|">|
  < STRING: "STRING:">|
+ < EPSILON: "epsilon">|
  < NonTerm: ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*>	 |
- < Term: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])*>
+ < Term: ["a"-"z","0"-"9"](["a"-"z","A"-"Z","0"-"9"])*>
 }
  
 SimpleNode Expression(): {/*@bgen(jjtree) Expression */
@@ -326,6 +331,8 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
 		|
 		  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
 		)
+	|
+		rhs=<EPSILON>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.EPSILON,rhs.beginLine,rhs.beginColumn));}
 	)+
 	(<OR>
 	{jjtn000.Variables.add(new Vector<Structure >());}
@@ -337,6 +344,8 @@ void StartAtribution():{/*@bgen(jjtree) StartAtribution */
 			|
 			  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
 			)
+		|
+			rhs=<EPSILON>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.EPSILON,rhs.beginLine,rhs.beginColumn));}
 		)+
 	)*
 	<ENDPROD>/*@bgen(jjtree)*/
@@ -371,6 +380,8 @@ void Atribution():{/*@bgen(jjtree) Atribution */
 		|
 		  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
 		)
+	|
+		rhs=<EPSILON>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.EPSILON,rhs.beginLine,rhs.beginColumn));}
 	)+
 	(<OR>
 	{jjtn000.Variables.add(new Vector<Structure >());}
@@ -382,6 +393,8 @@ void Atribution():{/*@bgen(jjtree) Atribution */
 			|
 			  rhs=<START>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.START,rhs.beginLine,rhs.beginColumn));}
 			)
+		|
+		rhs=<EPSILON>{jjtn000.Variables.get(jjtn000.Variables.size()-1).add(new Structure(rhs.image,Type.EPSILON,rhs.beginLine,rhs.beginColumn));}
 		)+
 	)*
 	<ENDPROD>/*@bgen(jjtree)*/

@@ -1,7 +1,7 @@
 package common;
 
 public enum Type {
-	TERM("TERM"), NONTERM("NONTERM"),NULL("NULL"), START("START"), STRING("STRING ELEMENT");
+	TERM("TERM"), NONTERM("NONTERM"),NULL("NULL"), START("START"), STRING("STRING ELEMENT"), EPSILON("EPSILON VALUE");
 	
 	private final String name;       
 
