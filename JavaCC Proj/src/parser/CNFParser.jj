@@ -50,7 +50,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 	public void run()
 	{
 		try {
-			SimpleNode root = Expression(); // devolve refer\u00c3\u00aancia para o n\u00c3\u00b3 raiz da \u00c3\u00a0rvore 
+			SimpleNode root = Expression(); // devolve refer\ufffd\ufffdncia para o n\ufffd\ufffd raiz da \ufffd\ufffdrvore 
 
 			//Create Symbol Table
 			this.createSymbolTable(root);
@@ -166,7 +166,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 				}
 				return;
 			}
-			else //gramatica n\u00c3\u00a3o permite chegar a este ponto
+			else //gramatica n\ufffd\ufffdo permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 				isValid=false;
@@ -195,7 +195,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants, /*@eg
 				}
 				return;
 			}
-			else //gramatica n\u00c3\u00a3o permite chegar a este ponto
+			else //gramatica n\ufffd\ufffdo permite chegar a este ponto
 			{
 				System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
 				isValid=false;
@@ -305,7 +305,7 @@ SimpleNode Expression(): {/*@bgen(jjtree) Expression */
             jjtree.closeNodeScope(jjtn000, true);
           }
         }
-/*@egen*/ // c\u00c3\u00b3digo Java entre chavetas 
+/*@egen*/ // c\ufffd\ufffddigo Java entre chavetas 
 }
 
 void StartAtribution():{/*@bgen(jjtree) StartAtribution */

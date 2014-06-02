@@ -39,7 +39,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
         public void run()
         {
                 try {
-                        SimpleNode root = Expression(); // devolve referência para o nó raiz da àrvore 
+                        SimpleNode root = Expression(); // devolve refer??ncia para o n?? raiz da ??rvore 
 
                         //Create Symbol Table
                         this.createSymbolTable(root);
@@ -157,7 +157,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 }
                                 return;
                         }
-                        else //gramatica não permite chegar a este ponto
+                        else //gramatica n??o permite chegar a este ponto
                         {
                                 System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                                 isValid=false;
@@ -186,7 +186,7 @@ public class CNFParser implements/*@bgen(jjtree)*/ CNFParserTreeConstants,Runnab
                                 }
                                 return;
                         }
-                        else //gramatica não permite chegar a este ponto
+                        else //gramatica n??o permite chegar a este ponto
                         {
                                 System.err.println("[Error] Invalid attribution in line "+node.Symbol.line+" ,column "+node.Symbol.column);
                                 isValid=false;

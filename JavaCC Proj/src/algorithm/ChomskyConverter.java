@@ -16,12 +16,14 @@ public class ChomskyConverter {
 	private static final String START0 = "START0" ;
 	private static final String START = "START" ;
 	private static final String OLDSTART = "OLDSTART" ;
+	private static final String EPSILON = "epsilon" ;
 	private static final int CFN_LIMIT = 4 ;
 	private static int GEN_PRODUTION_NAME = 0 ;
 	private static int GEN_VALUE_NAME = 0 ;
 	
 	private boolean analised ; // indica se a gramática já foi validada
 	private boolean isCNF ; // indica se a gramatica está na forma CNF
+	private boolean needNewStartProd ; // indica se e' necessario criar novo start na gramatica
 	
 	private static Vector<Vector<String>> productions ;
 	
@@ -30,6 +32,7 @@ public class ChomskyConverter {
 		productions = new Vector<Vector<String>>();
 		analised = false ;
 		isCNF = false ;
+		needNewStartProd = false ;
 		
 		for(Entry<Structure, List<Vector<Structure>>> entry : SymbolTable.entrySet()) {
 			List<Vector<Structure>> value = entry.getValue();
@@ -71,9 +74,10 @@ public class ChomskyConverter {
 		System.out.println("\nConverting grammar to Chomsky Normal Form...") ;
 		
 		// 1.
-		newStartProduction() ;
+		if( this.needNewStartProd )
+			newStartProduction() ;
 		// 2.
-		// gramática não aceita cadeias vazias!!!
+		removeEmptyProductions() ;
 		// 3.
 		removeUnitProductions() ;
 		// 4.
@@ -84,7 +88,7 @@ public class ChomskyConverter {
 		corretGrammar() ;	
 		
 		
-		System.out.println("Conversiton completed! This is the result.\n") ;
+		//System.out.println("Conversiton completed! This is the result.\n") ;
 		
 		//saveProductions() ;
 		organizeFile() ;
@@ -113,6 +117,61 @@ public class ChomskyConverter {
 		
 		productions = updatedproductions ;
 	}
+
+	private static void removeEmptyProductions() {
+
+		Vector<String> prodEmpty = new Vector<String>() ;
+		Vector<Vector<String>> newProductions = new Vector<Vector<String>>() ;
+		
+		boolean foundEpsilon = false ;
+		
+		for( Vector<String> prod : productions )
+		{
+			// verificar se uma producao tem o simbolo do vazio
+			for( int i=2 ; i<prod.size() ; i++ )
+				if( prod.elementAt(i).equals(EPSILON) )
+				{
+					foundEpsilon=true ;
+					prodEmpty.add(prod.elementAt(0)) ; // adicionado ao vetor para depois eliminar em todo o lado
+					prod.clear() ;
+					prod.add(ERASE_ME) ;
+				}
+		}
+		
+		for( String empty_prod : prodEmpty )
+		{
+			for( Vector<String> prod : productions )
+			{
+				for( int i=2 ; i<prod.size() ; i++ )
+					if( prod.elementAt(i).equals( empty_prod ) )
+					{
+						// criar nova regra
+						Vector<String> new_prod = new Vector<String>() ;
+						
+						boolean empty = true ; // para apanhar casos tipo A->epsilon e agora R->A : resultado seria R->_
+						
+						for( int k=0 ; k<prod.size() ; k++ )
+							if( ! (k==i) )
+							{
+								empty = false ;
+								new_prod.add( prod.elementAt(k) ) ;
+							}
+						
+						if( empty ) 
+							new_prod.add(EPSILON) ;
+						
+						newProductions.add( new_prod ) ;
+							
+					}
+			}
+			
+			for( Vector<String> newprod : newProductions )
+				productions.add( newprod ) ;
+		}
+		
+		
+		cleanUpProdutions() ;
+	}
 	
 	/**
 	 * Segundo passo da conversão: remover produções únitárias
@@ -132,11 +191,16 @@ public class ChomskyConverter {
 					String searchProd = new String( prod.elementAt(2) ) ; // anotar produção
 					
 					// só interessam produções do tipo A->B e não A->b !!
-					if( ! (searchProd.getBytes()[0] >= 'a' && searchProd.getBytes()[0] <= 'z') )
+					if( ! ((searchProd.getBytes()[0] >= 'a' && searchProd.getBytes()[0] <= 'z')
+							|| (searchProd.getBytes()[0] >= '0' && searchProd.getBytes()[0] <= '9') ) )
 					{
+						boolean searchProd_found = false ;
+						
 						for( Vector<String> sprod : productions ) // procurar em todos
 							if( sprod.elementAt(0).equals(searchProd)) // a produção anotada
 							{
+								searchProd_found = true ;
+								
 								Vector<String> newprod = new Vector<String>() ;
 								newprod.add( prod.elementAt(0) ) ;
 								newprod.add( ":=" ) ;
@@ -145,13 +209,17 @@ public class ChomskyConverter {
 								for(; i<sprod.size() ; i++ )
 									newprod.add( sprod.elementAt(i) ) ;
 								
-								if( i==3 && sprod.elementAt(i-1).getBytes()[0]>=65 && sprod.elementAt(i-1).getBytes()[0]<=90 )
+								if( i==3 && ((sprod.elementAt(i-1).getBytes()[0]>='a' && sprod.elementAt(i-1).getBytes()[0]<='z') ||
+										(sprod.elementAt(i-1).getBytes()[0]>='0' && sprod.elementAt(i-1).getBytes()[0]<='9')) )
 									doThisAgain=true ;
 								
 								temp_prod.add(newprod) ;
 							}
-						
-						prod.clear() ; prod.add(ERASE_ME) ;
+
+						if( searchProd_found )
+						{
+							prod.clear() ; prod.add(ERASE_ME) ;
+						}
 					}
 				}
 			}
@@ -172,74 +240,83 @@ public class ChomskyConverter {
 	private static void processProductions() 
 	{
 		Vector<Vector<String>> temp_prod = new Vector<Vector<String>>() ;
+		boolean doThisAgain = false ;
 		
-		for( Vector<String> prod : productions )
-		{
-			if( prod.size() > CFN_LIMIT )
+		do {
+			doThisAgain = false ;
+			
+			for( Vector<String> prod : productions )
 			{
-				Vector<String> v1 = new Vector<String>() ;
-				
-				String chomskyp = new String() ;		
-				
-				boolean found = false ;
-				
-				for( Vector<String> v : temp_prod )
+				if( prod.size() > CFN_LIMIT )
 				{
-					found = false ;
+					Vector<String> v1 = new Vector<String>() ;
 					
-					if( v.size() == prod.size()-1 )
+					String chomskyp = new String() ;		
+					
+					boolean found = false ;
+					
+					for( Vector<String> v : temp_prod )
 					{
-						for( int i=2 ; i<v.size() ; i++)
+						found = false ;
+						
+						if( v.size() == prod.size()-1 )
 						{
-							if( v.elementAt(i).equals( prod.elementAt(i+1) ) )
+							for( int i=2 ; i<v.size() ; i++)
 							{
-								
-								found = true ;
-							}
-							else
-							{
-								found = false ;
-								break ;
+								if( v.elementAt(i).equals( prod.elementAt(i+1) ) )
+								{
+									
+									found = true ;
+								}
+								else
+								{
+									found = false ;
+									break ;
+								}
 							}
 						}
-					}
+						
+						if ( found )
+						{
+							chomskyp = v.elementAt(0) ;
+							break ;
+						}
+					} 
+						
+					if( ! found )
+						chomskyp = genProdName() ;
 					
-					if ( found )
+					v1.add( prod.elementAt(0) ) ;
+					v1.add( prod.elementAt(1) ) ;
+					v1.add( prod.elementAt(2) ) ;
+					v1.add( chomskyp ) ;
+					
+					if ( ! found )
 					{
-						chomskyp = v.elementAt(0) ;
-						break ;
+						Vector<String> v2 = new Vector<String>() ;
+						v2.add( chomskyp ) ;
+						v2.add( ":=") ;
+						for( int i=3 ; i<prod.size() ; i++ )
+							v2.add( prod.elementAt(i) ) ;
+						
+						temp_prod.add(v2) ;
+						
+						if( v2.size() > ChomskyConverter.CFN_LIMIT )
+							doThisAgain = true ;
 					}
-				} 
 					
-				if( ! found )
-					chomskyp = genProdName() ;
-				
-				v1.add( prod.elementAt(0) ) ;
-				v1.add( prod.elementAt(1) ) ;
-				v1.add( prod.elementAt(2) ) ;
-				v1.add( chomskyp ) ;
-				
-				if ( ! found )
-				{
-					Vector<String> v2 = new Vector<String>() ;
-					v2.add( chomskyp ) ;
-					v2.add( ":=") ;
-					for( int i=3 ; i<prod.size() ; i++ )
-						v2.add( prod.elementAt(i) ) ;
+					temp_prod.add(v1) ;
 					
-					temp_prod.add(v2) ;
+					prod.clear() ; prod.add(ERASE_ME) ;
 				}
-				
-				temp_prod.add(v1) ;
-				
-				prod.clear() ; prod.add(ERASE_ME) ;
 			}
-		}
 		
-		for( Vector<String> v : temp_prod )
-			productions.add(v) ;
+			for( Vector<String> v : temp_prod )
+				productions.add(v) ;
 		
-		cleanUpProdutions() ;
+			cleanUpProdutions() ;
+			
+		} while( doThisAgain ) ;
 	}
 	
 	/**
@@ -364,6 +441,7 @@ public class ChomskyConverter {
 				{
 					printValidationError(prod,2) ;
 					this.isCNF = false ;
+					this.needNewStartProd = true ;
 					//return false ; // nao respeita a regra 1, há um loop para o start
 				}
 				
@@ -481,7 +559,10 @@ public class ChomskyConverter {
 	/**
 	 * corrige o nome da produção inicial 'START' para ser aceite pela gramática do parser
 	 */
-	private static void corretGrammar() {
+	private void corretGrammar() {
+		
+		if( ! this.needNewStartProd )
+			return ;
 		
 		Vector<Vector<String>> aux1 = new Vector<Vector<String>>() ;
 		
