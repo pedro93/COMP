@@ -88,7 +88,7 @@ public class ChomskyConverter {
 		corretGrammar() ;	
 		
 		
-		//System.out.println("Conversiton completed! This is the result.\n") ;
+		System.out.println("Conversiton completed! This is the result.\n") ;
 		
 		//saveProductions() ;
 		organizeFile() ;
@@ -167,6 +167,8 @@ public class ChomskyConverter {
 			
 			for( Vector<String> newprod : newProductions )
 				productions.add( newprod ) ;
+			
+			newProductions.clear() ;
 		}
 		
 		
