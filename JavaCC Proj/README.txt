@@ -19,10 +19,18 @@ A CYK Parser has the capability of parsing a input string (sentence), using a CF
 
 Our application is capable of doing this and has some added features to the traditional implementation:
 - Grammar conversion from CFG to CNF. The program does not need a specific CNF grammar in order to function. The group created a conversion algorithm that accepts a CFG grammar validated by our JavaCC rules:
-	> There must a START rule. At least One.
-	> The file must end with an "END" tag.
-	> Each rule must follow the NON-TERM := 
-	Besides this, our validator accepts grammar with symbols, numbers and the ε character.
+	> Expression -> StartAttribution+ Attribution* "END"
+	> StartAttribution -> "START" ASSIGN STMT (OR STMT)* ENDPROD
+	> Attribution -> NONTERM ASSIGN STMT (OR STMT)* ENDPROD
+	> STMT -> STMT2+
+	> STMT2 -> TERM | STMT3 | EPSILON
+	> STMT3 -> NONTERM | "START"
+	> ASSIGN -> ":="
+	> ENDPROD -> ";"
+	> EPSILON -> "epsilon"
+	> OR -> "|"
+	> NONTERM ->  ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*	 
+	> TERM ->  ["a"-"z","0"-"9"](["a"-"z","A"-"Z","0"-"9"])*
 - Graphic envirnoment (created in Java Swing) where the user can select a grammar, which can be validated by the application or not. If it is not the program analyses the grammar, shows the user the parsing made and concludes if the grammar is valid or not. After this the user enters another window where he must write a sentence, or sequence of characters (with spaces inbetween), and he then watches the table processing the algorithm does.
 
 **DEALING WITH SYNTACTIC ERRORS: (Describe how the syntactic error recovery of your tool does work. Does it exit after the first error?)
@@ -41,6 +49,16 @@ For our application Code Generation was not a requirement.
 
 **TASK DISTRIBUTION: (Identify the set of tasks done by each member of the project.)
 
+> Carlos Matias: Implementation of the CYK algorithm. Graphical animation of the algorithm's processing table.
+> Luís Abreu: Grammar conversion from CFG to CNF. Extended grammar to include the epsilon token. Syntax analysis of the CNF.
+> Pavel Alexeenko: Grammar conversion from CFG to CNF. Extended grammar to include the epsilon token. Syntax analysis of the CNF.
+> Pedro Silva: File reading. Semantical, syntactical and lexical analysis of the CFG. Implementation of the intermediate representation. Definition of the JavaCC rules (expressed above). Development of the GUI. 
+
 **PROS: (Identify the most positive aspects of your tool)
 
+Graphical envrionment to facilitate the user interaction with the application.
+Extension of the accepted grammars, broadening the user possibilities of input.
+
 **CONS: (Identify the most negative aspects of your tool)
+
+Limitations of the JavaCC accepted tokens. The further extension of the tokens would difficult the grammar conversion.
