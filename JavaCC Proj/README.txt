@@ -68,15 +68,13 @@ Each List element corresponds to one line where the key is the same. For example
 X:= A B 
 X:= c
 would be 2 elements in the list where the key would be "X".
-The vector inside each list element corresponds to a Structure read. Using the first production in the example above, each element (of type Structure) would contain "A" including its type
-(in this case NONTERM), the line and column it was read in the file.
+The vector inside each list element corresponds to a series of tokens read as objects of the Structure class. Using the first production in the example above, each element of the vector
+(of type Structure) would contain each to the variables shown including their type (in this case NONTERM), the line and column they were read in the file.
 
-For the project given, no LLIR was need.
+For the project given, no LLIR was needed as no code generation was required.
 
 **CODE GENERATION:
 Code generation was not a component necessary for the development of the application and as such, the group did not implement code generation.
-
-For our application Code Generation was not a requirement.
 
 **OVERVIEW: (refer the approach used in your tool, the main algorithms, etc.)
 
