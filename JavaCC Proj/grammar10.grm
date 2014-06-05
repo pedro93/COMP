@@ -1,0 +1,4 @@
+START:=A;
+A:=B | epsilon;
+B:=A | epsilon;
+END

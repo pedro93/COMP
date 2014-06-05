@@ -3,7 +3,9 @@ package algorithm;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -78,7 +80,7 @@ public class ChomskyConverter {
 		// 1.
 		if( needNewStartProd ) newStartProduction() ;
 		// 2.
-		removeEmptyProductions() ;
+		removeEmptyProductions(this.needNewStartProd) ;
 		// 3.
 		removeUnitProductions() ;
 		// 4.
@@ -92,6 +94,9 @@ public class ChomskyConverter {
 		System.out.println("Conversiton completed! This is the result.\n") ;
 		
 		//saveProductions() ;
+		
+		deleteDuplicatedProds() ;
+		
 		organizeFile() ;
 		printChomskyGrammar() ;
 		
@@ -122,9 +127,9 @@ public class ChomskyConverter {
 	/**
 	 * Segundo passo da conversão: remover produções para epsilon e criar novas produções
 	 */
-	private static void removeEmptyProductions() {
+	private static void removeEmptyProductions(boolean newstart ) {
 
-		epsilonProcessor = new CNF_EpsilonProcessor( productions ) ;
+		epsilonProcessor = new CNF_EpsilonProcessor( productions , newstart ) ;
 		epsilonProcessor.calculateNewProds() ;
 		productions = epsilonProcessor.getResults() ;
 	}
@@ -670,5 +675,21 @@ public class ChomskyConverter {
 		for( int i=0 ; i<prod.size(); i++)
 			System.out.print( prod.elementAt(i) + " " ) ;
 		System.out.println("\n") ;		
+	}
+	
+	/**
+	 * funcao que elimina produções repetidas no vetor 'productions'
+	 */
+	private void deleteDuplicatedProds() {
+		
+		Map<Integer, Vector<String> > prods = new HashMap< Integer, Vector<String> >() ;
+		
+		for( Vector<String> v : productions )
+			prods.put( v.hashCode() , v ) ;
+		
+		productions.clear() ;
+		
+		for( Map.Entry<Integer,Vector<String> > entry : prods.entrySet() ) 
+			productions.add(  entry.getValue() ) ;
 	}
 }

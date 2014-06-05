@@ -11,17 +11,20 @@ public class CNF_EpsilonProcessor {
 	private static final String START = "START" ;
 	private static final String EPSILON = "epsilon" ;
 	
-	private boolean doThisAgain = false ;
+	private boolean doThisAgain ;
+	private boolean hasNewStartProd ;
 	
 	private static Vector<String> emptyProds ;
 	private static Vector<Vector<String>> productions ;
 	private static Map<Integer, Vector<String> > newProds ;
 	
-	public CNF_EpsilonProcessor( Vector<Vector<String>> prods ) 
+	public CNF_EpsilonProcessor( Vector<Vector<String>> prods , boolean newstart ) 
 	{	
 		emptyProds = new Vector<String>() ;
 		newProds = new HashMap<Integer, Vector<String>>() ;
 		productions = prods ;
+		doThisAgain = false ;
+		hasNewStartProd = newstart ;
 	}
 
 	/**
@@ -30,16 +33,16 @@ public class CNF_EpsilonProcessor {
 	 */
 	public void calculateNewProds() 
 	{
-		doThisAgain = false ;
-		
 		tagEmptyProds() ;
+		
+		doThisAgain = false ;
 		
 		for( Vector<String> prod : productions )
 			generateAllPossibleProds( prod ) ;
 		
 		if ( doThisAgain )
 		{
-			emptyProds.clear() ;
+			emptyProds.clear();
 			cleanUpProdutions() ;
 			addNewProductions() ;
 			calculateNewProds() ;
@@ -51,16 +54,31 @@ public class CNF_EpsilonProcessor {
 	 * com transicoes para epsilon
 	 */
 	private void tagEmptyProds() {
+		
 		for( Vector<String> prod : productions )
 		{
 			// verificar se uma producao tem o simbolo do vazio
 			for( int i=2 ; i<prod.size() ; i++ )
-				if( prod.elementAt(i).equals(EPSILON) )//&& 
-						//!(prod.elementAt(0).equals(START0) || prod.elementAt(0).equals(START)) )
+				if( prod.elementAt(i).equals(EPSILON) )
 				{
-					emptyProds.add(prod.elementAt(0)) ; // adicionado ao vetor para depois eliminar em todo o lado
-					prod.clear() ;
-					prod.add(ERASE_ME) ;
+					if ( this.hasNewStartProd ) 
+					{
+						if( !(prod.elementAt(0).equals(START0) ) )
+						{
+							emptyProds.add(prod.elementAt(0)) ; // adicionado ao vetor para depois eliminar em todo o lado
+							prod.clear() ;
+							prod.add(ERASE_ME) ; 
+						}
+					}
+					else  
+					{
+						if( !(prod.elementAt(0).equals(START) ) )
+						{
+							emptyProds.add(prod.elementAt(0)) ; // adicionado ao vetor para depois eliminar em todo o lado
+							prod.clear() ;
+							prod.add(ERASE_ME) ; 
+						}
+					}
 				}
 		}
 	}
@@ -143,4 +161,5 @@ public class CNF_EpsilonProcessor {
 		
 		productions = this.getResults() ;
 	}
+
 }
