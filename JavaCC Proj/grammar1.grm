@@ -1,0 +1,15 @@
+START:=NP VP|X coisa;
+START:=coisa;
+VP:=VP PP;
+VP:=V NP;
+VP:=eats VP;
+PP:=P NP;
+NP:=Det N;
+NP:=she;
+V:=eats;
+P:=with;
+N:=fish;
+N:=fork;
+Det:=a;
+X:=s;
+END

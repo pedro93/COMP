@@ -23,9 +23,11 @@ public class ChomskyConverter {
 	
 	private boolean analised ; // indica se a gramática já foi validada
 	private boolean isCNF ; // indica se a gramatica está na forma CNF
-	private boolean needNewStartProd ; // indica se e' necessario criar novo start na gramatica
+	private boolean needNewStartProd ;
 	
 	private static Vector<Vector<String>> productions ;
+	
+	private static CNF_EpsilonProcessor epsilonProcessor ;
 	
  	public ChomskyConverter( TreeMap<Structure, List<Vector<Structure>>> SymbolTable )
 	{
@@ -64,8 +66,8 @@ public class ChomskyConverter {
 		 * 6. DONE
 		 */	
 
-		if( ! this.analised ) // antes de converter, a validação é obrigatória!!
-			isCNF() ;
+		// antes de converter, a validação é obrigatória!!
+		isCNF() ;
 		
 		if( this.isCNF ) // caso já esteja na forma normal devolve o vetor de produções inicial
 			return productions ;
@@ -74,8 +76,7 @@ public class ChomskyConverter {
 		System.out.println("\nConverting grammar to Chomsky Normal Form...") ;
 		
 		// 1.
-		if( this.needNewStartProd )
-			newStartProduction() ;
+		if( needNewStartProd ) newStartProduction() ;
 		// 2.
 		removeEmptyProductions() ;
 		// 3.
@@ -85,7 +86,7 @@ public class ChomskyConverter {
 		// 5.
 		processTerminals() ;
 		
-		corretGrammar() ;	
+		if( needNewStartProd ) corretGrammar() ;	
 		
 		
 		System.out.println("Conversiton completed! This is the result.\n") ;
@@ -118,61 +119,14 @@ public class ChomskyConverter {
 		productions = updatedproductions ;
 	}
 
+	/**
+	 * Segundo passo da conversão: remover produções para epsilon e criar novas produções
+	 */
 	private static void removeEmptyProductions() {
 
-		Vector<String> prodEmpty = new Vector<String>() ;
-		Vector<Vector<String>> newProductions = new Vector<Vector<String>>() ;
-		
-		boolean foundEpsilon = false ;
-		
-		for( Vector<String> prod : productions )
-		{
-			// verificar se uma producao tem o simbolo do vazio
-			for( int i=2 ; i<prod.size() ; i++ )
-				if( prod.elementAt(i).equals(EPSILON) )
-				{
-					foundEpsilon=true ;
-					prodEmpty.add(prod.elementAt(0)) ; // adicionado ao vetor para depois eliminar em todo o lado
-					prod.clear() ;
-					prod.add(ERASE_ME) ;
-				}
-		}
-		
-		for( String empty_prod : prodEmpty )
-		{
-			for( Vector<String> prod : productions )
-			{
-				for( int i=2 ; i<prod.size() ; i++ )
-					if( prod.elementAt(i).equals( empty_prod ) )
-					{
-						// criar nova regra
-						Vector<String> new_prod = new Vector<String>() ;
-						
-						boolean empty = true ; // para apanhar casos tipo A->epsilon e agora R->A : resultado seria R->_
-						
-						for( int k=0 ; k<prod.size() ; k++ )
-							if( ! (k==i) )
-							{
-								empty = false ;
-								new_prod.add( prod.elementAt(k) ) ;
-							}
-						
-						if( empty ) 
-							new_prod.add(EPSILON) ;
-						
-						newProductions.add( new_prod ) ;
-							
-					}
-			}
-			
-			for( Vector<String> newprod : newProductions )
-				productions.add( newprod ) ;
-			
-			newProductions.clear() ;
-		}
-		
-		
-		cleanUpProdutions() ;
+		epsilonProcessor = new CNF_EpsilonProcessor( productions ) ;
+		epsilonProcessor.calculateNewProds() ;
+		productions = epsilonProcessor.getResults() ;
 	}
 	
 	/**
@@ -425,6 +379,14 @@ public class ChomskyConverter {
 		System.out.println("\n------------ Chomsky Normal Form Validator ------------") ;
 		System.out.println("Testing if grammar is in Chomsky Normal Form...\n") ;
 		
+		System.out.println("Chomsky Normal Form Rules:") ;
+		System.out.println("> The right hand side of a rule consists of " );
+		System.out.println("> 1. either a single terminal: A->a") ;
+		System.out.println("> 2. or two variables: A->BC") ;
+		System.out.println("> 3. or the rule START->epsilon.") ;
+		System.out.println("> 4. The start symbol START may appear only on the left hand side of rules.") ;
+		System.out.println("\n") ;
+		
 		this.analised = true ;
 		this.isCNF = true ;
 		
@@ -435,6 +397,14 @@ public class ChomskyConverter {
 				printValidationError(prod,1) ;
 				this.isCNF = false ;
 				//return false ; // nao respeita a regra 2, significa que a produção é do tipo P->ABC, p.e.
+				
+				for ( int i=2 ; i<prod.size(); i++ )
+					if( prod.elementAt(i).equals(START) )
+					{
+						printValidationError(prod,2) ;
+						this.needNewStartProd = true ;
+					}
+						
 			}
 			else if ( prod.size() == 4 )
 			{
@@ -451,7 +421,7 @@ public class ChomskyConverter {
 				byte p2 = prod.elementAt(3).getBytes()[0] ;
 				
 				// A:65  a  Z:90  		ASCII codes
-				if( ! (p1>=65 && p1<=90 && p2>=65 && p2<=90) )
+				if( ! (p1>='A' && p1<='Z' && p2>='A' && p2<='Z') )
 				{
 					printValidationError(prod,3) ;
 					this.isCNF = false ;
@@ -463,18 +433,23 @@ public class ChomskyConverter {
 				byte p1 = prod.elementAt(2).getBytes()[0] ;
 				
 				// a:97  a  z:122		ASCII codes
-				if( ! (p1>=97 && p1<=122) )
+				if( ! ((p1>='a' && p1<='z') || (p1>='0' && p1<='1')) )
 				{
 					printValidationError(prod,4) ;
 					this.isCNF = false ;
 					//return false ; // nao respeita a regra 1, significa que a produção é do tipo P->A
+					
+					if ( prod.elementAt(2).equals(START) )
+					{
+						printValidationError(prod,2) ;
+						this.needNewStartProd = true ;
+					}
 				}
-			}
-			else
-			{
-				printValidationError(prod,5) ;
-				this.isCNF = false ;
-				//return false ; // nunca chega aqui porque não são aceites produções para o vazio pela gramática
+				else if ( prod.elementAt(2).equals(EPSILON) )
+				{
+					printValidationError(prod,5) ;
+					this.isCNF = false ;
+				}
 			}
 		}
 		
@@ -562,9 +537,6 @@ public class ChomskyConverter {
 	 * corrige o nome da produção inicial 'START' para ser aceite pela gramática do parser
 	 */
 	private void corretGrammar() {
-		
-		if( ! this.needNewStartProd )
-			return ;
 		
 		Vector<Vector<String>> aux1 = new Vector<Vector<String>>() ;
 		
@@ -676,19 +648,19 @@ public class ChomskyConverter {
 		
 		switch(error){
 		case 1:
-			System.out.println("> [Invalid] Found a production which exceded number of symbols.") ;
+			System.out.println("> [Warning] Found a production which exceded number of variables on the right hand side.") ;
 			break;
 		case 2:
-			System.out.println("> [Invalid] There is a loop on START.") ;
+			System.out.println("> [Warning] Found a START symbol on the right hand side.") ;
 			break;
 		case 3:
-			System.out.println("> [Invalid] Found a production that violates rule P->P1 P2.") ;
+			System.out.println("> [Warning] Found a production that violates rule A->B C.") ;
 			break;
 		case 4:
-			System.out.println("> [Invalid] Found a production that violates rule P->a.") ;
+			System.out.println("> [Warning] Found a production that violates rule A->a.") ;
 			break;
 		case 5:
-			System.out.println("> [Invalid] Found a production to epsilon.") ;
+			System.out.println("> [Warning] Found a production to epsilon diferent from START.") ;
 			break;
 		default:
 			return ;

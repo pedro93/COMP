@@ -9,6 +9,4 @@ B := S1 Va;
 B := S1 S1;
 B := b;
 Va := a;
-STRING:
-b b a b a a
 END

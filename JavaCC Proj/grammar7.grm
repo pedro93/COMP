@@ -1,0 +1,4 @@
+START:=A START A | a B;
+A:=B | START;
+B:=b | START;
+END
