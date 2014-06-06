@@ -36,7 +36,13 @@ Our application is capable of doing not only the aforementioned, but also has so
 - Graphic envirnoment (created in Java Swing). 
 
 How the application works:
-Start the application by clicking the jar file provided. When the graphical window appears, the user can select a grammar-related file by choosing the grammars available in the application directory or by choosing to browse the computer file system, which maybe be validated by the application or not depending on the file extension. A validated grammar has the ".ser" extension while a grammar file to test(and consequently "compiled") needs to have a ".grm" extension. If the grammar has the ".grm" extension, the program analyses the grammar, shows the user, the parsing execued and concludes if the grammar is valid or not (if it is the program creates a ".ser" grammar file). After this the user enters another window where he must write a sentence, or sequence of characters (with spaces in between), and is then shown, the table processing animation executed by the CYK algorithm. The animation concludes by telling the user if his input was accepted by the grammar or not.
+Start the application by clicking the jar file provided. 
+When the graphical window appears, the user can select a grammar-related file by choosing the grammars available in the application directory or by choosing to browse the computer file system, 
+which maybe be validated by the application or not depending on the file extension. 
+A validated grammar has the ".ser" extension while a grammar file to test(and consequently "compiled") needs to have a ".grm" extension. 
+If the grammar has the ".grm" extension, the program analyses the grammar, shows the user, the parsing execued and concludes if the grammar is valid or not 
+(if it is the program creates a ".ser" grammar file). After this the user enters another window where he must write a sentence, or sequence of characters (with spaces in between), and is then shown, the table processing animation executed by the CYK algorithm. 
+The animation concludes by telling the user if his input was accepted by the grammar or not.
 
 **DEALING WITH SYNTACTIC ERRORS: (Describe how the syntactic error recovery of your tool does work. Does it exit after the first error?)
 Before a conversion of a possible CFG into a CNF grammar, a syntactical analysis is executed by the Chosmky-Normal-Form validator which verifies if a given grammar follows the 
@@ -82,6 +88,7 @@ The CYK algorithm has two main ways of being implemented. It can be implemented 
 
 Our employment of the algorithm starts by processing a serialized grammar (".ser") to get the grammar productions. After this the algorithm creates a table where the results of iteration will be stored. In the first iteration the algorithm matches the user input to the productions and creates the first level of the table. The following iterations do not need the user input any longer and are done using the existing filled table rows. 
 
+Video example of how it works: https://www.youtube.com/watch?v=b98Uyj7JHIU
 
 **TESTSUITE AND TEST INFRASTRUCTURE: (Describe the content of your testsuite regarding the number of examples, the approach to automate the test, etc.)
 
