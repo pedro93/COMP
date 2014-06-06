@@ -1,6 +1,7 @@
 options 
 { 
- LOOKAHEAD=1; 
+ LOOKAHEAD=1;
+ STATIC=false; 
 } 
  
 PARSER_BEGIN(CNFParser) 
@@ -25,8 +26,8 @@ import algorithm.ChomskyConverter;
 public class CNFParser implements Runnable
 {
 
-	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
-	private Vector<Structure> AcessableTokens = new Vector<Structure>();
+	private TreeMap<Structure, List<Vector<Structure>>> SymbolTable = null;
+	private Vector<Structure> AcessableTokens = null;
 	private String filePath;
 	private File grammarFile;
 	public String newFilePath;
@@ -38,6 +39,8 @@ public class CNFParser implements Runnable
 	public CNFParser(String path) throws FileNotFoundException
 	{
 		this(new FileInputStream(new File(path)), null);
+		SymbolTable = new TreeMap<Structure,List<Vector<Structure>>>();
+		AcessableTokens = new Vector<Structure>();
 		this.filePath = path;
 		grammarFile=new File(filePath);
 	}
@@ -245,6 +248,18 @@ public class CNFParser implements Runnable
 		return true;
 	}
 
+	 public void clean() {
+        SymbolTable=null;
+        AcessableTokens=null;
+        grammarFile=null;
+        newFilePath=null;
+        try {
+			ReInit(new FileInputStream(new File(filePath)));
+		} catch (FileNotFoundException e) {
+			System.out.println(e.toString());
+			e.printStackTrace();
+		}
+     }
 } 
  
 PARSER_END(CNFParser) 

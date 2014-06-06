@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import common.ComboItem;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class StartPnl extends JPanel {
 
@@ -25,6 +27,19 @@ public class StartPnl extends JPanel {
 	/*Create the panel.*/
 	public StartPnl(Window par) {
 		super();
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				Object item = comboBox.getSelectedItem();
+				String comboxBoxItem =((ComboItem)item).getValue();
+				if(!comboxBoxItem.equals(""))
+					Window.filePath = comboxBoxItem;
+				else if(!btnBrowse.getText().equals(""))
+					Window.filePath = btnBrowse.getText();
+				else
+					Window.filePath = "";
+			}
+		});
 		this.parent = par;
 		fileSelected=false;
 		setLayout(null);
@@ -69,6 +84,7 @@ public class StartPnl extends JPanel {
 		btnRun.setBounds(368, 211, 45, 23);
 		btnRun.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				parent.runFile(Window.filePath);
 			}
 		});

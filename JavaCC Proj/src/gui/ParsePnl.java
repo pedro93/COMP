@@ -55,10 +55,11 @@ public class ParsePnl extends JPanel {
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.SOUTH);
 
-		JButton btnCanel = new JButton("Cancel");
+		JButton btnCanel = new JButton("Back to Main Menu");
 		btnCanel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Console.clear();
+				textArea.setText("");
 				parent.showPanel(0);
 			}
 		});
@@ -69,6 +70,7 @@ public class ParsePnl extends JPanel {
 		btnRunAlgorithm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Console.clear();
+				textArea.setText("");
 				parent.runCYK();
 			}
 		});
@@ -85,6 +87,7 @@ public class ParsePnl extends JPanel {
 	}
 
 	private void runParser() {
+		textArea.setText("");
 		Console.redirectOutput( textArea );
 		try {
 			parser = new CNFParser(Window.filePath);
@@ -94,7 +97,8 @@ public class ParsePnl extends JPanel {
 			e.printStackTrace();
 		}
 		if(parser!=null)
-			if(parser.isValid)
+		{
+			if(parser.isValid)	
 			{
 				btnRunAlgorithm.setEnabled(true);
 				Window.filePath=parser.newFilePath;
@@ -104,7 +108,7 @@ public class ParsePnl extends JPanel {
 			{
 				JOptionPane.showMessageDialog(this, "Grammar is not valid, please check console output for more information");
 			}
-		//stay in this panel or return
+			parser.clean();
+		}
 	}
-
 }

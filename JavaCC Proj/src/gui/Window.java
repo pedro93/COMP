@@ -146,6 +146,8 @@ public class Window extends JFrame {
 	}
 
 	public void showPanel(int i) {
+		getContentPane().hide();
+		panels.get(i).show();
 		setContentPane(panels.get(i));
 		revalidate();
 	}
@@ -166,6 +168,7 @@ public class Window extends JFrame {
 		if (i >= 0) {
 			extension = filePath.substring(i+1);
 		}
+		
 		if(extension.equals("grm")) //grammar file to be tested
 		{
 			showPanel(1);
@@ -179,7 +182,6 @@ public class Window extends JFrame {
 	}
 
 	public void runCYK() {
-		System.out.println("filePath used: "+Window.filePath);
 		showPanel(2);
 	}
 
