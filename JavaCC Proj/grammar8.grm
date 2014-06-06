@@ -1,5 +1,0 @@
-START:=A C;
-A:=B | START;
-B:=a;
-C:=c;
-END
