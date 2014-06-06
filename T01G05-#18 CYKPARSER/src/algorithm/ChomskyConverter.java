@@ -82,6 +82,7 @@ public class ChomskyConverter {
 		// 2.
 		removeEmptyProductions(this.needNewStartProd) ;
 		// 3.
+		removeLoops() ;
 		removeUnitProductions() ;
 		// 4.
 		processProductions() ;
@@ -134,6 +135,17 @@ public class ChomskyConverter {
 		productions = epsilonProcessor.getResults() ;
 	}
 	
+	private static void removeLoops() {
+		
+		for( Vector<String> prod : productions )
+			if( prod.size() == 3 )
+				if( prod.elementAt(0).equals(prod.elementAt(2)) )
+				{
+					prod.clear() ;
+					prod.add(ERASE_ME) ;
+				}
+	}
+	
 	/**
 	 * Segundo passo da conversão: remover produções únitárias
 	 */
@@ -172,9 +184,11 @@ public class ChomskyConverter {
 								
 								if( i==3 && ((sprod.elementAt(i-1).getBytes()[0]>='a' && sprod.elementAt(i-1).getBytes()[0]<='z') ||
 										(sprod.elementAt(i-1).getBytes()[0]>='0' && sprod.elementAt(i-1).getBytes()[0]<='9')) )
-									doThisAgain=true ;
+								{
+										doThisAgain=true ; 
+								}
 								
-								temp_prod.add(newprod) ;
+								temp_prod.add(newprod) ; 
 							}
 
 						if( searchProd_found )

@@ -3,3 +3,7 @@ A:=B;
 B:=a | epsilon;
 C:=c | epsilon;
 END
+
+# grammar 9
+
+Teste de conversão da gramática, onde é esperado como resultado uma produção START:=epsilon: a única produção para 'epsilon' aceite para uma gramática na forma normal de Chomsky.
