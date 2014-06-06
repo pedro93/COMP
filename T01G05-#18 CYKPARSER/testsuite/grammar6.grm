@@ -4,3 +4,7 @@ B:=START C | epsilon;
 C:=D;
 D:=d;
 END
+
+# grammar 6
+
+Outro teste para converter e retirar epsilons da gramática.

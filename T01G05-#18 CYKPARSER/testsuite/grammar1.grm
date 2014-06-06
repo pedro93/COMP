@@ -1,8 +1,7 @@
-START:=NP VP|X coisa;
-START:=coisa;
+START:=NP VP;
 VP:=VP PP;
 VP:=V NP;
-VP:=eats VP;
+VP:=V VP;
 PP:=P NP;
 NP:=Det N;
 NP:=she;
@@ -13,3 +12,8 @@ N:=fork;
 Det:=a;
 X:=s;
 END
+
+
+# grammar1
+
+Este exemplo pretende obter a confirmar pelo programa de que esta é uma gramática na forma CNF e que portanto não necessita de qualquer tipo de conversões.

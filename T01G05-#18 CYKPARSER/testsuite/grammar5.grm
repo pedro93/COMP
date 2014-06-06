@@ -1,4 +1,8 @@
-START:=A START B;
+START:=A START B | c;
 A:=a A START | a | epsilon;
 B:= START b START | A | b b;
 END
+
+# grammar 5
+
+Este exemplo tem como objetivo testar a remoção dos simbolos 'epsilons' numa gramática onde existe recursividade na produção START.

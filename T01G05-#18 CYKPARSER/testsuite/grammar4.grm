@@ -8,3 +8,8 @@ R5 := A1;
 A0 := 0;
 A1 := 1;
 END
+
+
+# grammar 4
+
+A gramática apresentada está na forma CFG e pretende-se converter para CNF. Neste exemplo é considerado o 'epsilon' na conversão.

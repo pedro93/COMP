@@ -2,3 +2,8 @@ START:=A START A | a B;
 A:=B | START;
 B:=b | START;
 END
+
+
+# grammar 7
+
+Teste simples para testar a conversão de CFG para CNF. Neste exemplo são são contemplados os simbolos 'epsilon'.

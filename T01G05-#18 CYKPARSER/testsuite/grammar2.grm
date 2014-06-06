@@ -10,3 +10,7 @@ B := S1 S1;
 B := b;
 Va := a;
 END
+
+# grammar 2
+
+Neste exemplo, existe 1 produção (START:=A, linha 2) que viola uma das regras da forma normal de Chomsky. Pretende-se testar a deteção e conversão de produções unitárias para a froma CNF.
