@@ -15,5 +15,6 @@ END
 
 
 # grammar1
-
-Este exemplo pretende obter a confirmar pelo programa de que esta é uma gramática na forma CNF e que portanto não necessita de qualquer tipo de conversões.
+This example is intended to show that the program correctly understands 
+that the given grammar is in the CNF form, and as such does not require
+any type of conversion.

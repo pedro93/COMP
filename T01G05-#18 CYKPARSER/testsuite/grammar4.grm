@@ -11,5 +11,5 @@ END
 
 
 # grammar 4
-
-A gramática apresentada está na forma CFG e pretende-se converter para CNF. Neste exemplo é considerado o 'epsilon' na conversão.
+The presented grammar is in the CFG form and we intend to convert it to the CNF form.
+In this example we also consider the 'episison' token during the conversion.

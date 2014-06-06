@@ -4,5 +4,5 @@ B:= START b START | A | b b;
 END
 
 # grammar 5
-
-Este exemplo tem como objetivo testar a remoção dos simbolos 'epsilons' numa gramática onde existe recursividade na produção START.
+The example has as an objective, to test the removal of 'epsilon' symbols
+in a grammar where recursivity can be found in the START production.

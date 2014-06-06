@@ -5,5 +5,6 @@ C:=c | epsilon;
 END
 
 # grammar 9
-
-Teste de conversão da gramática, onde é esperado como resultado uma produção START:=epsilon: a única produção para 'epsilon' aceite para uma gramática na forma normal de Chomsky.
+Grammar conversion test, where a START:=epsilon production is expected.
+This production is the only one which may be accepted in the grammar which
+follows the Chomsky normal form.

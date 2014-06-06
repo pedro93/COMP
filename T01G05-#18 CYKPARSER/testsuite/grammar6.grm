@@ -6,5 +6,5 @@ D:=d;
 END
 
 # grammar 6
-
-Outro teste para converter e retirar epsilons da gramática.
+Another example intend to test the conversion and removal
+of 'episilon' tokens from the grammar.
