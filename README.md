@@ -18,18 +18,19 @@ A CYK Parser with the capability of parsing and validating an input string (sent
 Our application is capable of doing not only the aforementioned, but also has some added features compared to the traditional version:
 
 - Grammar conversion from CFG to CNF. The program does not need a specific CNF grammar in order to function. The group created a conversion algorithm that accepts a CFG grammar validated by our JavaCC rules:
-	> Expression -> StartAttribution+ Attribution* "END"
-	> StartAttribution -> "START" ASSIGN STMT (OR STMT)* ENDPROD
-	> Attribution -> NONTERM ASSIGN STMT (OR STMT)* ENDPROD
-	> STMT -> STMT2+
-	> STMT2 -> TERM | STMT3 | EPSILON
-	> STMT3 -> NONTERM | "START"
-	> ASSIGN -> ":="
-	> ENDPROD -> ";"
-	> EPSILON -> "epsilon"
-	> OR -> "|"
-	> NONTERM ->  ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*	 
-	> TERM ->  ["a"-"z","0"-"9"](["a"-"z","A"-"Z","0"-"9"])*	
+	- Expression -> StartAttribution+ Attribution* "END"
+	- StartAttribution -> "START" ASSIGN STMT (OR STMT)* ENDPROD
+	- Attribution -> NONTERM ASSIGN STMT (OR STMT)* ENDPROD
+	- STMT -> STMT2+
+	- STMT2 -> TERM | STMT3 | EPSILON
+	- STMT3 -> NONTERM | "START"
+	- ASSIGN -> ":="
+	- ENDPROD -> ";"
+	- EPSILON -> "epsilon"
+	- OR -> "|"
+	- NONTERM ->  ["A"-"Z"](["a"-"z","A"-"Z","0"-"9"])*	 
+	- TERM ->  ["a"-"z","0"-"9"](["a"-"z","A"-"Z","0"-"9"])*	
+
 
 ###  Graphical environment (created in Java Swing). 
 
