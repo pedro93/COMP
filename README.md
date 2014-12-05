@@ -87,7 +87,7 @@ Video example of how it works: https://www.youtube.com/watch?v=b98Uyj7JHIU
 
 ### Task Distribution:
 
-> Carlos Matias: Implementation of the CYK algorithm. Graphical animation of the algorithm's processing table.
-> Luís Abreu: Grammar conversion from CFG to CNF. Extended grammar to include the epsilon token. Syntax analysis of the CNF.
-> Pavel Alexeenko: Grammar conversion from CFG to CNF. Extended grammar to include the epsilon token. Syntax analysis of the CNF.
-> Pedro Silva: File reading. Semantic, syntactical and lexical analysis of the CFG. Implementation of the intermediate representation. Definition of the JavaCC rules (expressed above). Development of the GUI. 
+ - Carlos Matias: Implementation of the CYK algorithm. Graphical animation of the algorithm's processing table.
+ - Luís Abreu: Grammar conversion from CFG to CNF. Extended grammar to include the epsilon token. Syntax analysis of the CNF.
+ - Pavel Alexeenko: Grammar conversion from CFG to CNF. Extended grammar to include the epsilon token. Syntax analysis of the CNF.
+ - Pedro Silva: File reading. Semantic, syntactical and lexical analysis of the CFG. Implementation of the intermediate representation. Definition of the JavaCC rules (expressed above). Development of the GUI. 
